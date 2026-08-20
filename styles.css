@@ -1,4 +1,4 @@
-/* Chronos Attendance - Stylesheet */
+/* Cure Plus Biotech Attendance - Stylesheet */
 
 /* Import Google Fonts */
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap');
@@ -146,8 +146,9 @@ body {
 .brand-name {
     font-family: var(--font-heading);
     font-weight: 700;
-    font-size: 20px;
-    letter-spacing: -0.5px;
+    font-size: 14px;
+    line-height: 1.2;
+    letter-spacing: -0.3px;
     background: linear-gradient(135deg, var(--text-primary), var(--text-secondary));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;

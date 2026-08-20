@@ -1,4 +1,4 @@
-// Chronos Attendance - Application Controllers & Logic
+// Cure Plus Biotech Attendance - Application Controllers & Logic
 (function() {
     // Ensure state from data.js is loaded
     const App = window.AttendanceApp;
@@ -786,7 +786,7 @@
         const encodedUri = encodeURI(csvContent);
         const link = document.createElement("a");
         link.setAttribute("href", encodedUri);
-        link.setAttribute("download", `Chronos_Attendance_Log_${new Date().toISOString().split('T')[0]}.csv`);
+        link.setAttribute("download", `Cure_Plus_Biotech_Attendance_Log_${new Date().toISOString().split('T')[0]}.csv`);
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
