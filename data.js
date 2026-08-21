@@ -6,48 +6,75 @@ window.AttendanceApp = window.AttendanceApp || {};
     const defaultEmployees = [
         {
             id: "EMP001",
-            name: "Sarah Jenkins",
-            role: "HR Director",
-            email: "sarah.j@company.com",
-            avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150",
+            name: "Yashwanth",
+            role: "Project Manager",
+            email: "yashwanth@company.com",
+            avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
             status: "active", // active, break, offline
             joinedDate: "2024-01-15"
         },
         {
             id: "EMP002",
-            name: "Marcus Vance",
+            name: "Harish",
             role: "Lead Engineer",
-            email: "marcus.v@company.com",
-            avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
+            email: "harish@company.com",
+            avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150",
             status: "active",
             joinedDate: "2024-02-10"
         },
         {
             id: "EMP003",
-            name: "Elena Rostova",
-            role: "Product Designer",
-            email: "elena.r@company.com",
-            avatar: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150",
+            name: "Shahid",
+            role: "UI/UX Designer",
+            email: "shahid@company.com",
+            avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150",
             status: "break",
             joinedDate: "2024-03-22"
         },
         {
             id: "EMP004",
-            name: "David Chen",
-            role: "Marketing Manager",
-            email: "david.c@company.com",
-            avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150",
+            name: "Shivkumar",
+            role: "Software Engineer",
+            email: "shivkumar@company.com",
+            avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150",
             status: "offline",
             joinedDate: "2024-05-01"
         },
         {
             id: "EMP005",
-            name: "Aisha Rahman",
+            name: "Deepali",
             role: "QA Specialist",
-            email: "aisha.r@company.com",
+            email: "deepali@company.com",
             avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150",
             status: "offline",
             joinedDate: "2024-06-18"
+        },
+        {
+            id: "EMP006",
+            name: "Avinash",
+            role: "DevOps Engineer",
+            email: "avinash@company.com",
+            avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
+            status: "offline",
+            joinedDate: "2024-07-05"
+        },
+        {
+            id: "EMP007",
+            name: "Mohammed Ateef",
+            role: "Backend Developer",
+            email: "ateef@company.com",
+            avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150",
+            status: "active",
+            joinedDate: "2024-08-01"
+        },
+        {
+            id: "EMP008",
+            name: "Arun",
+            role: "Business Analyst",
+            email: "arun@company.com",
+            avatar: "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=150",
+            status: "offline",
+            joinedDate: "2024-08-15"
         }
     ];
 
@@ -159,30 +186,38 @@ window.AttendanceApp = window.AttendanceApp || {};
         let logs = localStorage.getItem("attendance_logs");
         let currentUserId = localStorage.getItem("attendance_current_user_id");
 
-        if (!employees) {
+        let needReset = false;
+        if (employees) {
+            try {
+                const parsedEmployees = JSON.parse(employees);
+                // Reset local storage state if employee count or any name does not match current code config
+                if (parsedEmployees.length !== defaultEmployees.length || 
+                    parsedEmployees.some((emp, idx) => emp.name !== defaultEmployees[idx]?.name)) {
+                    needReset = true;
+                }
+            } catch (e) {
+                needReset = true;
+            }
+        }
+
+        if (!employees || needReset) {
             employees = defaultEmployees;
             localStorage.setItem("attendance_employees", JSON.stringify(employees));
-        } else {
-            employees = JSON.parse(employees);
-        }
-
-        if (!settings) {
+            
             settings = defaultSettings;
             localStorage.setItem("attendance_settings", JSON.stringify(settings));
-        } else {
-            settings = JSON.parse(settings);
-        }
-
-        if (!logs) {
+            
             logs = generateMockLogs(employees, settings, 30);
             localStorage.setItem("attendance_logs", JSON.stringify(logs));
-        } else {
-            logs = JSON.parse(logs);
-        }
-
-        if (!currentUserId) {
-            currentUserId = employees[0].id; // Sarah Jenkins default
+            
+            currentUserId = employees[0].id;
             localStorage.setItem("attendance_current_user_id", currentUserId);
+            
+            localStorage.removeItem("attendance_activities");
+        } else {
+            employees = JSON.parse(employees);
+            settings = JSON.parse(settings);
+            logs = JSON.parse(logs);
         }
 
         return { employees, settings, logs, currentUserId };
