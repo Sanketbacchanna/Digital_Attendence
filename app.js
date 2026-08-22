@@ -119,7 +119,23 @@
         settingGracePeriod: document.getElementById('settingGracePeriod'),
         settingLocationTrack: document.getElementById('settingLocationTrack'),
         btnSaveSettings: document.getElementById('btnSaveSettings'),
-        btnResetAll: document.getElementById('btnResetAll')
+        btnResetAll: document.getElementById('btnResetAll'),
+        
+        // CEO Portal Elements
+        ceoTotalEmployees: document.getElementById('ceoTotalEmployees'),
+        ceoActiveEmployees: document.getElementById('ceoActiveEmployees'),
+        ceoBreakEmployees: document.getElementById('ceoBreakEmployees'),
+        ceoOfflineEmployees: document.getElementById('ceoOfflineEmployees'),
+        ceoEmployeeTableBody: document.getElementById('ceoEmployeeTableBody'),
+        ceoSearchEmployee: document.getElementById('ceoSearchEmployee'),
+        ceoOverrideEmployeeId: document.getElementById('ceoOverrideEmployeeId'),
+        ceoLeaveEmployeeId: document.getElementById('ceoLeaveEmployeeId'),
+        ceoOverrideForm: document.getElementById('ceoOverrideForm'),
+        ceoLeaveForm: document.getElementById('ceoLeaveForm'),
+        ceoAddEmployeeModal: document.getElementById('ceoAddEmployeeModal'),
+        btnOpenAddEmployeeModal: document.getElementById('btnOpenAddEmployeeModal'),
+        btnAddEmployeeClose: document.getElementById('btnAddEmployeeClose'),
+        ceoAddEmployeeForm: document.getElementById('ceoAddEmployeeForm')
     };
 
     // ----------------------------------------------------
@@ -149,6 +165,9 @@
         
         // Initialize dashboard stats
         updateDashboardStats();
+        
+        // Initialize CEO Portal dropdowns
+        populateCeoEmployeeDropdowns();
     }
 
     function setupEventListeners() {
@@ -205,6 +224,36 @@
         // Settings actions
         DOM.btnSaveSettings.addEventListener('click', saveConfigSettings);
         DOM.btnResetAll.addEventListener('click', resetLocalStorage);
+
+        // CEO Portal events
+        if (DOM.ceoSearchEmployee) {
+            DOM.ceoSearchEmployee.addEventListener('input', renderCeoPortal);
+        }
+        if (DOM.btnOpenAddEmployeeModal) {
+            DOM.btnOpenAddEmployeeModal.addEventListener('click', () => {
+                document.getElementById('addEmpJoinedDate').value = new Date().toISOString().split('T')[0];
+                DOM.ceoAddEmployeeModal.classList.add('active');
+            });
+        }
+        if (DOM.btnAddEmployeeClose) {
+            DOM.btnAddEmployeeClose.addEventListener('click', () => {
+                DOM.ceoAddEmployeeModal.classList.remove('active');
+            });
+        }
+        if (DOM.ceoAddEmployeeModal) {
+            DOM.ceoAddEmployeeModal.addEventListener('click', (e) => {
+                if (e.target === DOM.ceoAddEmployeeModal) DOM.ceoAddEmployeeModal.classList.remove('active');
+            });
+        }
+        if (DOM.ceoAddEmployeeForm) {
+            DOM.ceoAddEmployeeForm.addEventListener('submit', handleAddEmployee);
+        }
+        if (DOM.ceoOverrideForm) {
+            DOM.ceoOverrideForm.addEventListener('submit', handleOverrideAttendance);
+        }
+        if (DOM.ceoLeaveForm) {
+            DOM.ceoLeaveForm.addEventListener('submit', handleAssignLeave);
+        }
     }
 
     // ----------------------------------------------------
@@ -239,6 +288,8 @@
         } else if (tabId === 'dashboard') {
             updateDashboardStats();
             renderTeamTracker();
+        } else if (tabId === 'ceo') {
+            renderCeoPortal();
         }
     }
 
@@ -1033,6 +1084,399 @@
             DOM.analyticsBarChart.appendChild(col);
         });
     }
+
+    // ----------------------------------------------------
+    // CEO PORTAL MANAGEMENT PANEL
+    // ----------------------------------------------------
+    function populateCeoEmployeeDropdowns() {
+        if (!DOM.ceoOverrideEmployeeId || !DOM.ceoLeaveEmployeeId) return;
+        
+        const options = App.employees.map(emp => 
+            `<option value="${emp.id}">${emp.name} (${emp.role})</option>`
+        ).join('');
+        
+        DOM.ceoOverrideEmployeeId.innerHTML = options;
+        DOM.ceoLeaveEmployeeId.innerHTML = options;
+    }
+
+    function renderCeoPortal() {
+        if (!DOM.ceoEmployeeTableBody) return;
+        
+        // Update stats
+        const total = App.employees.length;
+        let active = 0;
+        let onBreak = 0;
+        let offline = 0;
+        
+        App.employees.forEach(emp => {
+            if (emp.status === "active") active++;
+            else if (emp.status === "break") onBreak++;
+            else offline++;
+        });
+        
+        DOM.ceoTotalEmployees.textContent = total;
+        DOM.ceoActiveEmployees.textContent = active;
+        DOM.ceoBreakEmployees.textContent = onBreak;
+        DOM.ceoOfflineEmployees.textContent = offline;
+        
+        // Populate dropdown selectors if empty or count changed
+        populateCeoEmployeeDropdowns();
+        
+        // Filter and render list
+        const search = DOM.ceoSearchEmployee.value.toLowerCase();
+        DOM.ceoEmployeeTableBody.innerHTML = '';
+        
+        const filtered = App.employees.filter(emp => 
+            emp.name.toLowerCase().includes(search) || emp.role.toLowerCase().includes(search)
+        );
+        
+        if (filtered.length === 0) {
+            DOM.ceoEmployeeTableBody.innerHTML = `
+                <tr>
+                    <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 20px;">
+                        No employees matched the query.
+                    </td>
+                </tr>
+            `;
+            return;
+        }
+        
+        const todayStr = new Date().toISOString().split('T')[0];
+        
+        filtered.forEach(emp => {
+            // Find today's log
+            const log = App.logs.find(l => l.employeeId === emp.id && l.date === todayStr);
+            
+            let statusBadgeClass = "offline";
+            let statusLabel = "Offline";
+            if (emp.status === "active") {
+                statusLabel = log && log.status === "Late" ? "Late" : "Working";
+                statusBadgeClass = log && log.status === "Late" ? "late" : "present";
+            } else if (emp.status === "break") {
+                statusLabel = "On Break";
+                statusBadgeClass = "late";
+            } else if (log && log.status === "On Leave") {
+                statusLabel = "On Leave";
+                statusBadgeClass = "on-leave";
+            }
+            
+            const checkInVal = log && log.checkIn ? log.checkIn.substring(0, 5) : "--:--";
+            const checkOutVal = log && log.checkOut ? log.checkOut.substring(0, 5) : "--:--";
+            
+            // Build buttons based on status
+            let punchBtnHTML = "";
+            if (emp.status === "offline") {
+                punchBtnHTML = `<button class="action-btn" onclick="window.AttendanceApp.ceoPunchIn('${emp.id}')" style="padding: 4px 10px; font-size: 11px; background: var(--success-bg); color: var(--success); border-color: rgba(16, 185, 129, 0.2);">Clock In</button>`;
+            } else {
+                punchBtnHTML = `<button class="action-btn" onclick="window.AttendanceApp.ceoPunchOut('${emp.id}')" style="padding: 4px 10px; font-size: 11px; background: var(--danger-bg); color: var(--danger); border-color: rgba(239, 68, 68, 0.2);">Clock Out</button>`;
+            }
+            
+            const deleteBtnHTML = `<button class="action-btn" onclick="window.AttendanceApp.ceoDeleteEmployee('${emp.id}')" style="padding: 4px 10px; font-size: 11px; color: var(--danger); border-color: rgba(239, 68, 68, 0.2);" ${App.employees.length <= 1 ? 'disabled' : ''}>Delete</button>`;
+            
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td style="display: flex; align-items: center; gap: 10px;">
+                    <div class="log-avatar initials-avatar ${getAvatarColorClass(emp.id)}" style="width: 32px; height: 32px; border-radius: 50%; font-size: 12px;">${getInitials(emp.name)}</div>
+                    <div>
+                        <div style="font-weight: 600;">${emp.name}</div>
+                        <div style="font-size: 10px; color: var(--text-muted);">${emp.role}</div>
+                    </div>
+                </td>
+                <td><span class="status-badge ${statusBadgeClass}">${statusLabel}</span></td>
+                <td style="font-family: monospace; font-size: 12px;">${checkInVal} / ${checkOutVal}</td>
+                <td>
+                    <div style="display: flex; gap: 8px;">
+                        ${punchBtnHTML}
+                        ${deleteBtnHTML}
+                    </div>
+                </td>
+            `;
+            DOM.ceoEmployeeTableBody.appendChild(row);
+        });
+    }
+
+    function handleAddEmployee(e) {
+        e.preventDefault();
+        
+        const name = document.getElementById('addEmpName').value.trim();
+        const role = document.getElementById('addEmpRole').value.trim();
+        const email = document.getElementById('addEmpEmail').value.trim();
+        const joinedDate = document.getElementById('addEmpJoinedDate').value;
+        
+        // Generate new EMP ID
+        const maxId = App.employees.reduce((max, emp) => {
+            const num = parseInt(emp.id.replace(/\D/g, '')) || 0;
+            return num > max ? num : max;
+        }, 0);
+        const newId = `EMP${(maxId + 1).toString().padStart(3, '0')}`;
+        
+        const newEmp = {
+            id: newId,
+            name: name,
+            role: role,
+            email: email,
+            status: "offline",
+            joinedDate: joinedDate
+        };
+        
+        App.employees.push(newEmp);
+        App.saveEmployees(App.employees);
+        
+        // Reset and close modal
+        DOM.ceoAddEmployeeForm.reset();
+        DOM.ceoAddEmployeeModal.classList.remove('active');
+        
+        // Re-render components
+        renderUserSwitcher();
+        renderTeamTracker();
+        renderCeoPortal();
+        
+        addActivityLog("System Admin", `New employee profile created for ${name}.`, "info");
+    }
+
+    function handleOverrideAttendance(e) {
+        e.preventDefault();
+        
+        const empId = document.getElementById('ceoOverrideEmployeeId').value;
+        const dateStr = document.getElementById('ceoOverrideDate').value;
+        const checkIn = document.getElementById('ceoOverrideCheckIn').value;
+        const checkOut = document.getElementById('ceoOverrideCheckOut').value || null;
+        const status = document.getElementById('ceoOverrideStatus').value;
+        const notes = document.getElementById('ceoOverrideNotes').value.trim() || "CEO Manual Entry";
+        
+        const emp = App.employees.find(e => e.id === empId);
+        if (!emp) return;
+        
+        // Search if a log already exists for this employee on this date
+        const existingLogIndex = App.logs.findIndex(log => log.employeeId === empId && log.date === dateStr);
+        
+        // Geolocation simulation (HQ address)
+        const location = { lat: 37.7749, lng: -122.4194, address: "HQ Office (San Francisco)" };
+        
+        const newOrUpdatedLog = {
+            id: `LOG_${dateStr.replace(/-/g, '')}_${empId}`,
+            employeeId: empId,
+            date: dateStr,
+            status: status,
+            checkIn: checkIn ? checkIn + ":00" : null,
+            checkOut: checkOut ? checkOut + ":00" : null,
+            breakDuration: 0,
+            notes: notes,
+            location: location
+        };
+        
+        if (existingLogIndex >= 0) {
+            App.logs[existingLogIndex] = newOrUpdatedLog;
+        } else {
+            App.logs.push(newOrUpdatedLog);
+        }
+        
+        App.saveLogs(App.logs);
+        
+        // If overriding today's status, update their active employee status
+        const todayStr = new Date().toISOString().split('T')[0];
+        if (dateStr === todayStr) {
+            let activeStatus = "offline";
+            if (checkIn && !checkOut) {
+                activeStatus = "active";
+            }
+            updateEmployeeStatus(empId, activeStatus);
+        }
+        
+        DOM.ceoOverrideForm.reset();
+        
+        // Refresh UI
+        renderCeoPortal();
+        renderTeamTracker();
+        if (empId === App.currentUserId) {
+            syncPunchUI();
+            updateCurrentUserUI();
+        }
+        
+        addActivityLog("System Admin", `Manual override logged for ${emp.name} on ${dateStr}.`, "success");
+    }
+
+    function handleAssignLeave(e) {
+        e.preventDefault();
+        
+        const empId = document.getElementById('ceoLeaveEmployeeId').value;
+        const startStr = document.getElementById('ceoLeaveStartDate').value;
+        const endStr = document.getElementById('ceoLeaveEndDate').value;
+        const notes = document.getElementById('ceoLeaveNotes').value.trim() || "Approved Leave";
+        
+        const emp = App.employees.find(e => e.id === empId);
+        if (!emp) return;
+        
+        const startDate = new Date(startStr);
+        const endDate = new Date(endStr);
+        
+        if (startDate > endDate) {
+            alert("Start date must be before or equal to End date.");
+            return;
+        }
+        
+        // Loop through the dates and insert leave logs
+        let current = new Date(startDate);
+        const todayStr = new Date().toISOString().split('T')[0];
+        let hasToday = false;
+        
+        while (current <= endDate) {
+            const dateStr = current.toISOString().split('T')[0];
+            
+            const existingLogIndex = App.logs.findIndex(log => log.employeeId === empId && log.date === dateStr);
+            
+            const leaveLog = {
+                id: `LOG_${dateStr.replace(/-/g, '')}_${empId}`,
+                employeeId: empId,
+                date: dateStr,
+                status: "On Leave",
+                checkIn: null,
+                checkOut: null,
+                breakDuration: 0,
+                notes: notes,
+                location: null
+            };
+            
+            if (existingLogIndex >= 0) {
+                App.logs[existingLogIndex] = leaveLog;
+            } else {
+                App.logs.push(leaveLog);
+            }
+            
+            if (dateStr === todayStr) {
+                hasToday = true;
+            }
+            
+            current.setDate(current.getDate() + 1);
+        }
+        
+        App.saveLogs(App.logs);
+        
+        if (hasToday) {
+            updateEmployeeStatus(empId, "offline");
+        }
+        
+        DOM.ceoLeaveForm.reset();
+        
+        renderCeoPortal();
+        renderTeamTracker();
+        if (empId === App.currentUserId) {
+            syncPunchUI();
+            updateCurrentUserUI();
+        }
+        
+        addActivityLog("System Admin", `Leave period assigned to ${emp.name} (${startStr} to ${endStr}).`, "info");
+    }
+
+    // Expose CEO action functions globally
+    App.ceoPunchIn = function(empId) {
+        const emp = App.employees.find(e => e.id === empId);
+        if (!emp) return;
+        
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const dateStr = now.toISOString().split('T')[0];
+        
+        const newLog = {
+            id: `LOG_${dateStr.replace(/-/g, '')}_${empId}`,
+            employeeId: empId,
+            date: dateStr,
+            status: "Present",
+            checkIn: timeStr,
+            checkOut: null,
+            breakDuration: 0,
+            notes: "CEO Forced Clock-In",
+            location: { lat: 37.7749, lng: -122.4194, address: "HQ Office (San Francisco)" }
+        };
+        
+        App.logs.push(newLog);
+        App.saveLogs(App.logs);
+        updateEmployeeStatus(empId, "active");
+        
+        renderCeoPortal();
+        renderTeamTracker();
+        if (empId === App.currentUserId) {
+            syncPunchUI();
+            updateCurrentUserUI();
+        }
+        
+        addActivityLog("System Admin", `CEO clocked in ${emp.name} manually.`, "success");
+    };
+
+    App.ceoPunchOut = function(empId) {
+        const emp = App.employees.find(e => e.id === empId);
+        if (!emp) return;
+        
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
+        const dateStr = now.toISOString().split('T')[0];
+        
+        const todayLog = App.logs.find(log => log.employeeId === empId && log.date === dateStr);
+        if (todayLog) {
+            todayLog.checkOut = timeStr;
+            todayLog.notes = todayLog.notes ? todayLog.notes + " | CEO Forced Clock-Out" : "CEO Forced Clock-Out";
+            if (todayLog.status === "On Break") {
+                todayLog.status = "Present";
+            }
+            App.saveLogs(App.logs);
+        } else {
+            const newLog = {
+                id: `LOG_${dateStr.replace(/-/g, '')}_${empId}`,
+                employeeId: empId,
+                date: dateStr,
+                status: "Present",
+                checkIn: App.settings.workStartTime + ":00",
+                checkOut: timeStr,
+                breakDuration: 0,
+                notes: "CEO Forced Clock-Out",
+                location: { lat: 37.7749, lng: -122.4194, address: "HQ Office (San Francisco)" }
+            };
+            App.logs.push(newLog);
+            App.saveLogs(App.logs);
+        }
+        
+        updateEmployeeStatus(empId, "offline");
+        
+        renderCeoPortal();
+        renderTeamTracker();
+        if (empId === App.currentUserId) {
+            syncPunchUI();
+            updateCurrentUserUI();
+        }
+        
+        addActivityLog("System Admin", `CEO clocked out ${emp.name} manually.`, "danger");
+    };
+
+    App.ceoDeleteEmployee = function(empId) {
+        if (App.employees.length <= 1) {
+            alert("You cannot delete the last remaining employee.");
+            return;
+        }
+        
+        const emp = App.employees.find(e => e.id === empId);
+        if (!emp) return;
+        
+        if (!confirm(`Are you sure you want to permanently delete the employee profile for ${emp.name}? This will also delete all their attendance records.`)) {
+            return;
+        }
+        
+        const updatedEmployees = App.employees.filter(e => e.id !== empId);
+        App.saveEmployees(updatedEmployees);
+        
+        const updatedLogs = App.logs.filter(l => l.employeeId !== empId);
+        App.saveLogs(updatedLogs);
+        
+        if (empId === App.currentUserId) {
+            App.setCurrentUser(updatedEmployees[0].id);
+        }
+        
+        renderUserSwitcher();
+        updateCurrentUserUI();
+        renderTeamTracker();
+        renderCeoPortal();
+        
+        addActivityLog("System Admin", `CEO deleted employee profile for ${emp.name}.`, "danger");
+    };
 
     // ----------------------------------------------------
     // SETTINGS PANEL
