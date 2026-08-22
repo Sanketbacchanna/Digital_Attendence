@@ -9,7 +9,6 @@ window.AttendanceApp = window.AttendanceApp || {};
             name: "Yashwanth",
             role: "Project Manager",
             email: "yashwanth@company.com",
-            avatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150",
             status: "active", // active, break, offline
             joinedDate: "2024-01-15"
         },
@@ -18,7 +17,6 @@ window.AttendanceApp = window.AttendanceApp || {};
             name: "Harish",
             role: "Lead Engineer",
             email: "harish@company.com",
-            avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150",
             status: "active",
             joinedDate: "2024-02-10"
         },
@@ -27,7 +25,6 @@ window.AttendanceApp = window.AttendanceApp || {};
             name: "Shahid",
             role: "UI/UX Designer",
             email: "shahid@company.com",
-            avatar: "https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150",
             status: "break",
             joinedDate: "2024-03-22"
         },
@@ -36,7 +33,6 @@ window.AttendanceApp = window.AttendanceApp || {};
             name: "Shivkumar",
             role: "Software Engineer",
             email: "shivkumar@company.com",
-            avatar: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150",
             status: "offline",
             joinedDate: "2024-05-01"
         },
@@ -45,7 +41,6 @@ window.AttendanceApp = window.AttendanceApp || {};
             name: "Deepali",
             role: "QA Specialist",
             email: "deepali@company.com",
-            avatar: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150",
             status: "offline",
             joinedDate: "2024-06-18"
         },
@@ -54,7 +49,6 @@ window.AttendanceApp = window.AttendanceApp || {};
             name: "Avinash",
             role: "DevOps Engineer",
             email: "avinash@company.com",
-            avatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150",
             status: "offline",
             joinedDate: "2024-07-05"
         },
@@ -63,7 +57,6 @@ window.AttendanceApp = window.AttendanceApp || {};
             name: "Mohammed Ateef",
             role: "Backend Developer",
             email: "ateef@company.com",
-            avatar: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150",
             status: "active",
             joinedDate: "2024-08-01"
         },
@@ -72,7 +65,6 @@ window.AttendanceApp = window.AttendanceApp || {};
             name: "Arun",
             role: "Business Analyst",
             email: "arun@company.com",
-            avatar: "https://images.unsplash.com/photo-1501196354995-cbb51c65aaea?w=150",
             status: "offline",
             joinedDate: "2024-08-15"
         }
@@ -192,7 +184,7 @@ window.AttendanceApp = window.AttendanceApp || {};
                 const parsedEmployees = JSON.parse(employees);
                 // Reset local storage state if employee count or any name does not match current code config
                 if (parsedEmployees.length !== defaultEmployees.length || 
-                    parsedEmployees.some((emp, idx) => emp.name !== defaultEmployees[idx]?.name)) {
+                    parsedEmployees.some((emp, idx) => emp.name !== defaultEmployees[idx]?.name || emp.avatar)) {
                     needReset = true;
                 }
             } catch (e) {

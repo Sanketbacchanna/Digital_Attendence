@@ -232,6 +232,47 @@ body {
     border: 2px solid var(--border-color);
 }
 
+.initials-avatar {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff !important;
+    font-weight: 700;
+    font-family: var(--font-heading);
+    text-transform: uppercase;
+    user-select: none;
+}
+
+/* Specific sizes/alignments for different components */
+.user-avatar.initials-avatar {
+    font-size: 14px;
+}
+.dropdown-item-avatar.initials-avatar {
+    font-size: 11px;
+}
+.member-avatar.initials-avatar {
+    font-size: 13px;
+}
+.log-avatar.initials-avatar {
+    font-size: 10px;
+}
+
+.dropdown-item-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+}
+
+/* Color gradients for employee initials avatar */
+.initials-avatar.color-1 { background: linear-gradient(135deg, #FF6B6B, #FF8E53) !important; }
+.initials-avatar.color-2 { background: linear-gradient(135deg, #4E65FF, #92EFFD) !important; }
+.initials-avatar.color-3 { background: linear-gradient(135deg, #11998e, #38ef7d) !important; }
+.initials-avatar.color-4 { background: linear-gradient(135deg, #FC466B, #3F5EFB) !important; }
+.initials-avatar.color-5 { background: linear-gradient(135deg, #7F00FF, #E100FF) !important; }
+.initials-avatar.color-6 { background: linear-gradient(135deg, #f12711, #f5af19) !important; }
+.initials-avatar.color-7 { background: linear-gradient(135deg, #3a7bd5, #3a6073) !important; }
+.initials-avatar.color-8 { background: linear-gradient(135deg, #e91e63, #ff6090) !important; }
+
 .user-info {
     display: flex;
     flex-direction: column;

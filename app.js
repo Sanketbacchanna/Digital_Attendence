@@ -7,6 +7,21 @@
         return;
     }
 
+    // Helper to get initials from a name
+    function getInitials(name) {
+        if (!name) return "";
+        const parts = name.trim().split(/\s+/);
+        if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+        return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+    }
+
+    // Helper to get consistent background color class for avatars
+    function getAvatarColorClass(empId) {
+        const num = parseInt(empId.replace(/\D/g, '')) || 1;
+        const index = ((num - 1) % 8) + 1; // 1 to 8
+        return `color-${index}`;
+    }
+
     // Active Interval for Time Clock
     let sessionTimerInterval = null;
     let clockInterval = null;
@@ -273,7 +288,7 @@
             const item = document.createElement('div');
             item.className = 'dropdown-item';
             item.innerHTML = `
-                <img src="${emp.avatar}" alt="${emp.name}">
+                <div class="dropdown-item-avatar initials-avatar ${getAvatarColorClass(emp.id)}">${getInitials(emp.name)}</div>
                 <div class="dropdown-item-details">
                     <span class="dropdown-item-name">${emp.name}</span>
                     <span class="dropdown-item-role">${emp.role}</span>
@@ -294,7 +309,8 @@
         if (!user) return;
 
         // Sidebar card
-        DOM.sidebarUserAvatar.src = user.avatar;
+        DOM.sidebarUserAvatar.textContent = getInitials(user.name);
+        DOM.sidebarUserAvatar.className = `user-avatar initials-avatar ${getAvatarColorClass(user.id)}`;
         DOM.sidebarUserName.textContent = user.name;
         DOM.sidebarUserRole.textContent = user.role;
 
@@ -625,7 +641,7 @@
             item.innerHTML = `
                 <div class="member-info-section">
                     <div class="member-avatar-wrapper">
-                        <img src="${emp.avatar}" alt="${emp.name}" class="member-avatar">
+                        <div class="member-avatar initials-avatar ${getAvatarColorClass(emp.id)}">${getInitials(emp.name)}</div>
                         <span class="status-indicator-dot ${statusDotClass}"></span>
                     </div>
                     <div class="member-name-role">
@@ -740,7 +756,7 @@
             const row = document.createElement('tr');
             row.innerHTML = `
                 <td style="display: flex; align-items: center; gap: 10px;">
-                    <img src="${emp.avatar}" style="width: 28px; height: 28px; border-radius: 50%; object-fit: cover;">
+                    <div class="log-avatar initials-avatar ${getAvatarColorClass(emp.id)}" style="width: 28px; height: 28px; border-radius: 50%;">${getInitials(emp.name)}</div>
                     <div>
                         <div style="font-weight: 600;">${emp.name}</div>
                         <div style="font-size: 10px; color: var(--text-muted);">${emp.role}</div>
