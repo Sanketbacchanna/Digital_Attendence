@@ -1165,7 +1165,6 @@
                     <div class="log-avatar initials-avatar ${getAvatarColorClass(emp.id)}" style="width: 38px; height: 38px; border-radius: 50%; font-size: 13px;">${getInitials(emp.name)}</div>
                     <div class="ceo-emp-details">
                         <span class="ceo-emp-name">${emp.name}</span>
-                        <span class="ceo-emp-role">${emp.role}</span>
                     </div>
                 </div>
                 <div class="ceo-emp-actions">
