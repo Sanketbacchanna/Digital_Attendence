@@ -54,7 +54,6 @@
         userProfileWidget: document.getElementById('userProfileWidget'),
         sidebarUserAvatar: document.getElementById('sidebarUserAvatar'),
         sidebarUserName: document.getElementById('sidebarUserName'),
-        sidebarUserRole: document.getElementById('sidebarUserRole'),
         employeeSwitcherMenu: document.getElementById('employeeSwitcherMenu'),
         
         // Dashboard Stats
@@ -342,7 +341,6 @@
                 <div class="dropdown-item-avatar initials-avatar ${getAvatarColorClass(emp.id)}">${getInitials(emp.name)}</div>
                 <div class="dropdown-item-details">
                     <span class="dropdown-item-name">${emp.name}</span>
-                    <span class="dropdown-item-role">${emp.role}</span>
                 </div>
             `;
             item.addEventListener('click', () => {
@@ -363,7 +361,6 @@
         DOM.sidebarUserAvatar.textContent = getInitials(user.name);
         DOM.sidebarUserAvatar.className = `user-avatar initials-avatar ${getAvatarColorClass(user.id)}`;
         DOM.sidebarUserName.textContent = user.name;
-        DOM.sidebarUserRole.textContent = user.role;
 
         // Reset check-in state variables
         clearInterval(sessionTimerInterval);
@@ -372,7 +369,7 @@
         DOM.punchNoteWrapper.style.display = 'none';
 
         // Check if the current user is the CEO
-        const isCeo = user.role.toLowerCase() === 'ceo';
+        const isCeo = user.role && user.role.toLowerCase() === 'ceo';
         
         // Show/hide CEO Portal and Settings tabs in sidebar
         const ceoTab = document.querySelector('.nav-item[data-tab="ceo"]');

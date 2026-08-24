@@ -15,7 +15,6 @@ window.AttendanceApp = window.AttendanceApp || {};
         {
             id: "EMP002",
             name: "Harish",
-            role: "Lead Engineer",
             email: "harish@company.com",
             status: "active",
             joinedDate: "2024-02-10"
@@ -23,7 +22,6 @@ window.AttendanceApp = window.AttendanceApp || {};
         {
             id: "EMP003",
             name: "Shahid",
-            role: "UI/UX Designer",
             email: "shahid@company.com",
             status: "break",
             joinedDate: "2024-03-22"
@@ -31,7 +29,6 @@ window.AttendanceApp = window.AttendanceApp || {};
         {
             id: "EMP004",
             name: "Shivkumar",
-            role: "Software Engineer",
             email: "shivkumar@company.com",
             status: "offline",
             joinedDate: "2024-05-01"
@@ -39,7 +36,6 @@ window.AttendanceApp = window.AttendanceApp || {};
         {
             id: "EMP005",
             name: "Deepali",
-            role: "QA Specialist",
             email: "deepali@company.com",
             status: "offline",
             joinedDate: "2024-06-18"
@@ -47,7 +43,6 @@ window.AttendanceApp = window.AttendanceApp || {};
         {
             id: "EMP006",
             name: "Avinash",
-            role: "DevOps Engineer",
             email: "avinash@company.com",
             status: "offline",
             joinedDate: "2024-07-05"
@@ -55,7 +50,6 @@ window.AttendanceApp = window.AttendanceApp || {};
         {
             id: "EMP007",
             name: "Mohammed Ateef",
-            role: "Backend Developer",
             email: "ateef@company.com",
             status: "active",
             joinedDate: "2024-08-01"
@@ -63,7 +57,6 @@ window.AttendanceApp = window.AttendanceApp || {};
         {
             id: "EMP008",
             name: "Arun",
-            role: "Business Analyst",
             email: "arun@company.com",
             status: "offline",
             joinedDate: "2024-08-15"
