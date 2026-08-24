@@ -5,17 +5,9 @@ window.AttendanceApp = window.AttendanceApp || {};
     // 1. Initial Employees List
     const defaultEmployees = [
         {
-            id: "EMP000",
-            name: "Sanket Bacchanna",
-            role: "CEO",
-            email: "ceo@cureplusbiotech.com",
-            status: "offline",
-            joinedDate: "2024-01-01"
-        },
-        {
             id: "EMP001",
             name: "Yashwanth",
-            role: "Project Manager",
+            role: "CEO",
             email: "yashwanth@company.com",
             status: "active", // active, break, offline
             joinedDate: "2024-01-15"

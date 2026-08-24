@@ -392,19 +392,10 @@
             }
         }
 
-        // Toggle visibility of Time Clock controls vs CEO notice on dashboard
-        const clockFaceContainer = document.getElementById('clockFaceContainer');
-        const attendanceNoticeContainer = document.getElementById('attendanceNoticeContainer');
-        const punchActions = document.getElementById('punchActions');
-        
-        if (isCeo) {
-            if (clockFaceContainer) clockFaceContainer.style.display = '';
-            if (attendanceNoticeContainer) attendanceNoticeContainer.style.display = 'none';
-            if (punchActions) punchActions.style.display = '';
-        } else {
-            if (clockFaceContainer) clockFaceContainer.style.display = 'none';
-            if (attendanceNoticeContainer) attendanceNoticeContainer.style.display = 'flex';
-            if (punchActions) punchActions.style.display = 'none';
+        // Simply hide/show the entire Time Clock card for non-CEO users
+        const punchCard = document.querySelector('.punch-card');
+        if (punchCard) {
+            punchCard.style.display = isCeo ? '' : 'none';
         }
 
         // Read current punch state
