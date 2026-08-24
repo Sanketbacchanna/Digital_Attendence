@@ -721,7 +721,6 @@
                     </div>
                     <div class="member-name-role">
                         <span class="member-name">${emp.name}</span>
-                        <span class="member-role">${emp.role}</span>
                     </div>
                 </div>
                 <div class="member-time-log">
@@ -784,7 +783,7 @@
             if (!emp) return false;
 
             // Search Filter
-            const matchesSearch = emp.name.toLowerCase().includes(searchVal) || emp.role.toLowerCase().includes(searchVal);
+            const matchesSearch = emp.name.toLowerCase().includes(searchVal);
             
             // Status Filter
             const matchesStatus = statusVal === 'All' || log.status === statusVal;
@@ -834,7 +833,6 @@
                     <div class="log-avatar initials-avatar ${getAvatarColorClass(emp.id)}" style="width: 28px; height: 28px; border-radius: 50%;">${getInitials(emp.name)}</div>
                     <div>
                         <div style="font-weight: 600;">${emp.name}</div>
-                        <div style="font-size: 10px; color: var(--text-muted);">${emp.role}</div>
                     </div>
                 </td>
                 <td>${log.date}</td>
@@ -858,20 +856,20 @@
         DOM.nextPageBtn.disabled = endIdx >= filteredLogs.length;
     }
 
+    // Adjust colspan in the table header of index.html in mind
     function exportLogsToCSV() {
         if (filteredLogs.length === 0) return;
         
         let csvContent = "data:text/csv;charset=utf-8,";
-        csvContent += "Employee Name,Role,Date,Check-In,Check-Out,Break Duration (Mins),Status,Location,Notes\n";
+        csvContent += "Employee Name,Date,Check-In,Check-Out,Break Duration (Mins),Status,Location,Notes\n";
 
         filteredLogs.forEach(log => {
             const emp = App.employees.find(e => e.id === log.employeeId);
             const name = emp ? emp.name : 'Unknown';
-            const role = emp ? emp.role : 'Unknown';
             const location = log.location ? log.location.address.replace(/,/g, ' ') : '';
             const notes = log.notes ? log.notes.replace(/,/g, ' ') : '';
 
-            csvContent += `"${name}","${role}","${log.date}","${log.checkIn || ''}","${log.checkOut || ''}",${log.breakDuration || 0},"${log.status}","${location}","${notes}"\n`;
+            csvContent += `"${name}","${log.date}","${log.checkIn || ''}","${log.checkOut || ''}",${log.breakDuration || 0},"${log.status}","${location}","${notes}"\n`;
         });
 
         const encodedUri = encodeURI(csvContent);
