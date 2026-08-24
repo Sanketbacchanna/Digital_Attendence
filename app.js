@@ -371,6 +371,42 @@
         DOM.punchNoteInput.value = '';
         DOM.punchNoteWrapper.style.display = 'none';
 
+        // Check if the current user is the CEO
+        const isCeo = user.role.toLowerCase() === 'ceo';
+        
+        // Show/hide CEO Portal and Settings tabs in sidebar
+        const ceoTab = document.querySelector('.nav-item[data-tab="ceo"]');
+        const settingsTab = document.querySelector('.nav-item[data-tab="settings"]');
+        
+        if (ceoTab) ceoTab.style.display = isCeo ? '' : 'none';
+        if (settingsTab) settingsTab.style.display = isCeo ? '' : 'none';
+        
+        // If not CEO and currently on a restricted tab, switch back to dashboard
+        if (!isCeo) {
+            const activeTab = document.querySelector('.nav-menu .nav-item.active');
+            if (activeTab) {
+                const activeTabId = activeTab.getAttribute('data-tab');
+                if (activeTabId === 'ceo' || activeTabId === 'settings') {
+                    switchTab('dashboard');
+                }
+            }
+        }
+
+        // Toggle visibility of Time Clock controls vs CEO notice on dashboard
+        const clockFaceContainer = document.getElementById('clockFaceContainer');
+        const attendanceNoticeContainer = document.getElementById('attendanceNoticeContainer');
+        const punchActions = document.getElementById('punchActions');
+        
+        if (isCeo) {
+            if (clockFaceContainer) clockFaceContainer.style.display = '';
+            if (attendanceNoticeContainer) attendanceNoticeContainer.style.display = 'none';
+            if (punchActions) punchActions.style.display = '';
+        } else {
+            if (clockFaceContainer) clockFaceContainer.style.display = 'none';
+            if (attendanceNoticeContainer) attendanceNoticeContainer.style.display = 'flex';
+            if (punchActions) punchActions.style.display = 'none';
+        }
+
         // Read current punch state
         syncPunchUI();
         updateDashboardStats();

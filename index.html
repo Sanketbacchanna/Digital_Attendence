@@ -150,17 +150,25 @@
                                 Time Clock
                             </h3>
                             
-                            <div class="clock-face-container">
+                            <div class="clock-face-container" id="clockFaceContainer">
                                 <button class="punch-btn" id="mainPunchBtn">
                                     <svg viewBox="0 0 24 24"><path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/></svg>
                                     <span>Check In</span>
                                 </button>
                             </div>
                             
+                            <!-- Notice for non-CEO employees -->
+                            <div class="attendance-notice-container" id="attendanceNoticeContainer" style="display: none;">
+                                <div class="notice-icon">
+                                    <svg viewBox="0 0 24 24" width="32" height="32" fill="none" stroke="var(--info)" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+                                </div>
+                                <span class="notice-text">Attendance is managed by the CEO</span>
+                            </div>
+                            
                             <span class="session-timer-label">CURRENT SESSION</span>
                             <div class="session-timer" id="sessionTimerDisplay">00:00:00</div>
                             
-                            <div class="punch-actions">
+                            <div class="punch-actions" id="punchActions">
                                 <button class="action-btn" id="breakBtn" disabled>
                                     <svg viewBox="0 0 24 24"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
                                     <span>Take Break</span>
