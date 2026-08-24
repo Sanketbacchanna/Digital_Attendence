@@ -1654,6 +1654,115 @@ body {
         padding: 0 16px;
     }
 }
+/* CEO Attendance Grid */
+.ceo-attendance-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.ceo-emp-card {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius-md);
+    padding: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: var(--transition-smooth);
+}
+
+[data-theme="light"] .ceo-emp-card {
+    background: rgba(0, 0, 0, 0.02);
+}
+
+.ceo-emp-card:hover {
+    transform: translateY(-2px);
+    background: var(--bg-card-hover);
+    border-color: rgba(99, 102, 241, 0.2);
+}
+
+.ceo-emp-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.ceo-emp-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.ceo-emp-name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+
+.ceo-emp-role {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+}
+
+.ceo-emp-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* Present (Green Tick) Button */
+.ceo-btn-present {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    background: rgba(16, 185, 129, 0.05);
+    color: var(--success);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.ceo-btn-present:hover {
+    background: rgba(16, 185, 129, 0.15);
+}
+
+.ceo-btn-present.active {
+    background: var(--success) !important;
+    color: white !important;
+    border-color: var(--success) !important;
+    box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
+}
+
+/* Absent (Red Cross) Button */
+.ceo-btn-absent {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    background: rgba(239, 68, 68, 0.05);
+    color: var(--danger);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition-smooth);
+}
+
+.ceo-btn-absent:hover {
+    background: rgba(239, 68, 68, 0.15);
+}
+
+.ceo-btn-absent.active {
+    background: var(--danger) !important;
+    color: white !important;
+    border-color: var(--danger) !important;
+    box-shadow: 0 0 10px rgba(239, 68, 68, 0.4);
+}
+
 /* Media styling for printing clean attendance sheets */
 @media print {
     body {
