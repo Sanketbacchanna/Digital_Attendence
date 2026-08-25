@@ -1,4 +1,4 @@
-README – Digital Attendance System
+Digital Attendance System
 
 Overview
 
