@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en" data-theme="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CURE PLUS BIOTECH PRIVATE LIMITED | Digital Employee Attendance Sheet</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
     <div class="app-container">
         <!-- Sidebar Navigation -->
@@ -14,17 +16,25 @@
                 <div class="brand-logo">C</div>
                 <h1 class="brand-name">CURE PLUS BIOTECH PRIVATE LIMITED</h1>
             </div>
-            
+
             <ul class="nav-menu">
                 <li class="nav-item active" data-tab="logs">
                     <a class="nav-link">
-                        <svg viewBox="0 0 24 24"><path d="M12 20h9M3 20v-8c0-2.2 1.8-4 4-4h10c2.2 0 4 1.8 4 4v8M3 12h18M9 8V4c0-1.1.9-2 2-2h2c1.1 0 2 .9 2 2v4"/></svg>
+                        <svg viewBox="0 0 24 24">
+                            <path
+                                d="M12 20h9M3 20v-8c0-2.2 1.8-4 4-4h10c2.2 0 4 1.8 4 4v8M3 12h18M9 8V4c0-1.1.9-2 2-2h2c1.1 0 2 .9 2 2v4" />
+                        </svg>
                         Attendance Log
                     </a>
                 </li>
                 <li class="nav-item" data-tab="ceo">
                     <a class="nav-link">
-                        <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                        <svg viewBox="0 0 24 24">
+                            <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
                         CEO Portal
                     </a>
                 </li>
@@ -36,8 +46,10 @@
                 <div class="user-info">
                     <span class="user-name" id="sidebarUserName">Loading...</span>
                 </div>
-                <svg class="profile-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
-                
+                <svg class="profile-chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="6 9 12 15 18 9" />
+                </svg>
+
                 <!-- Hidden Switcher Menu -->
                 <div class="employee-dropdown-menu" id="employeeSwitcherMenu">
                     <!-- Dynamic Items Go Here -->
@@ -53,7 +65,7 @@
                     <h2 class="header-greeting" id="headerGreeting">Hello!</h2>
                     <span class="header-date" id="headerDate">Thursday, August 20, 2026</span>
                 </div>
-                
+
                 <div class="header-controls">
                     <!-- Live clock -->
                     <div class="clock-widget">
@@ -63,22 +75,35 @@
 
                     <!-- Theme Toggle -->
                     <button class="theme-toggle-btn" id="themeToggleBtn" title="Toggle Theme">
-                        <svg class="sun-icon" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-                        <svg class="moon-icon" viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-                    </</button>
+                        <svg class="sun-icon" viewBox="0 0 24 24">
+                            <circle cx="12" cy="12" r="5" />
+                            <line x1="12" y1="1" x2="12" y2="3" />
+                            <line x1="12" y1="21" x2="12" y2="23" />
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                            <line x1="1" y1="12" x2="3" y2="12" />
+                            <line x1="21" y1="12" x2="23" y2="12" />
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                        </svg>
+                        <svg class="moon-icon" viewBox="0 0 24 24">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                        </svg>
+                        </< /button>
                 </div>
             </header>
 
             <!-- Scrollable Workspace -->
             <div class="workspace-wrapper">
-                
+
                 <!-- TAB 2: ATTENDANCE LOG -->
                 <div class="tab-content active" id="logs">
                     <!-- Filter Section -->
                     <div class="filter-bar">
                         <div class="filter-group">
                             <label class="filter-label">Search Employee</label>
-                            <input type="text" class="filter-control" id="filterSearchName" placeholder="Search by name...">
+                            <input type="text" class="filter-control" id="filterSearchName"
+                                placeholder="Search by name...">
                         </div>
                         <div class="filter-group">
                             <label class="filter-label">Filter Status</label>
@@ -98,13 +123,20 @@
                             <label class="filter-label">End Date</label>
                             <input type="date" class="filter-control" id="filterEndDate">
                         </div>
-                        
-                        <button class="btn-export" id="btnPrintReport" style="margin-left: auto; background: var(--info-bg); color: var(--info); border-color: rgba(6, 182, 212, 0.2);">
-                            <svg viewBox="0 0 24 24"><polygon points="6 9 18 9 18 4 6 4 6 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg>
+
+                        <button class="btn-export" id="btnPrintReport"
+                            style="margin-left: auto; background: var(--info-bg); color: var(--info); border-color: rgba(6, 182, 212, 0.2);">
+                            <svg viewBox="0 0 24 24">
+                                <polygon points="6 9 18 9 18 4 6 4 6 9" />
+                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2" />
+                                <rect x="6" y="14" width="12" height="8" />
+                            </svg>
                             Print PDF
                         </button>
                         <button class="btn-export" id="btnExportCSV">
-                            <svg viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+                            <svg viewBox="0 0 24 24">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3" />
+                            </svg>
                             Export CSV
                         </button>
                     </div>
@@ -117,12 +149,12 @@
                                     <tr>
                                         <th>Employee</th>
                                         <th>Date</th>
-                                        <th>Check-In</th>
-                                        <th>Check-Out</th>
-                                        <th>Break (Mins)</th>
+                                        <!-- <th>Check-In</th>
+                                        <th>Check-Out</th> -->
+                                        <!-- <th>Break (Mins)</th> -->
                                         <th>Status</th>
-                                        <th>Location</th>
-                                        <th>Notes</th>
+                                        <!-- <th>Location</th>
+                                        <th>Notes</th> -->
                                     </tr>
                                 </thead>
                                 <tbody id="attendanceLogsTableBody">
@@ -130,7 +162,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        
+
                         <!-- Table Pagination -->
                         <div class="pagination-container">
                             <span class="pagination-info" id="paginationInfo">Showing 1-10 of 0 entries</span>
@@ -143,14 +175,17 @@
                 </div>
 
 
- 
+
                 <!-- TAB 6: CEO PORTAL -->
                 <div class="tab-content" id="ceo">
                     <!-- CEO Stats Grid -->
                     <div class="stats-grid">
                         <div class="card stat-card">
                             <div class="stat-icon-wrapper stat-blue">
-                                <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                </svg>
                             </div>
                             <div class="stat-info">
                                 <span class="stat-value" id="ceoTotalEmployees">0</span>
@@ -159,7 +194,9 @@
                         </div>
                         <div class="card stat-card">
                             <div class="stat-icon-wrapper stat-green">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <polyline points="20 6 9 17 4 12" />
+                                </svg>
                             </div>
                             <div class="stat-info">
                                 <span class="stat-value" id="ceoActiveEmployees">0</span>
@@ -168,7 +205,10 @@
                         </div>
                         <div class="card stat-card">
                             <div class="stat-icon-wrapper stat-red">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                                    <line x1="18" y1="6" x2="6" y2="18" />
+                                    <line x1="6" y1="6" x2="18" y2="18" />
+                                </svg>
                             </div>
                             <div class="stat-info">
                                 <span class="stat-value" id="ceoOfflineEmployees">0</span>
@@ -179,13 +219,22 @@
 
                     <!-- CEO Attendance Grid -->
                     <div class="card full-width-section">
-                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                        <div
+                            style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                             <h3 class="card-title" style="margin-bottom: 0;">
-                                <svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                                    <circle cx="9" cy="7" r="4" />
+                                </svg>
                                 Mark Today's Attendance
                             </h3>
-                            <button class="btn-export" id="btnOpenAddEmployeeModal" style="background: var(--success-bg); color: var(--success); border-color: rgba(16, 185, 129, 0.2); font-weight: 600;">
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="margin-right: 6px; width: 16px; height: 16px; display: inline-block; vertical-align: middle;"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                            <button class="btn-export" id="btnOpenAddEmployeeModal"
+                                style="background: var(--success-bg); color: var(--success); border-color: rgba(16, 185, 129, 0.2); font-weight: 600;">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                                    style="margin-right: 6px; width: 16px; height: 16px; display: inline-block; vertical-align: middle;">
+                                    <line x1="12" y1="5" x2="12" y2="19" />
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                </svg>
                                 Add Employee
                             </button>
                         </div>
@@ -200,35 +249,42 @@
     </div>
 
 
- 
+
     <!-- Add Employee Modal -->
     <div class="modal-overlay" id="ceoAddEmployeeModal">
         <div class="modal-card">
             <div class="modal-header">
                 <h3 class="modal-title">Add New Employee</h3>
                 <button class="modal-close-btn" id="btnAddEmployeeClose">
-                    <svg viewBox="0 0 24 24"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    <svg viewBox="0 0 24 24">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
                 </button>
             </div>
-            
-            <form id="ceoAddEmployeeForm" onsubmit="event.preventDefault();" style="display: flex; flex-direction: column; gap: 16px; padding: 20px;">
+
+            <form id="ceoAddEmployeeForm" onsubmit="event.preventDefault();"
+                style="display: flex; flex-direction: column; gap: 16px; padding: 20px;">
                 <div class="settings-input-group">
                     <label class="settings-label">Full Name</label>
                     <input type="text" class="settings-input" id="addEmpName" placeholder="e.g. John Doe" required>
                 </div>
                 <div class="settings-input-group">
                     <label class="settings-label">Job Role</label>
-                    <input type="text" class="settings-input" id="addEmpRole" placeholder="e.g. Senior Developer" required>
+                    <input type="text" class="settings-input" id="addEmpRole" placeholder="e.g. Senior Developer"
+                        required>
                 </div>
                 <div class="settings-input-group">
                     <label class="settings-label">Email Address</label>
-                    <input type="email" class="settings-input" id="addEmpEmail" placeholder="e.g. john.doe@company.com" required>
+                    <input type="email" class="settings-input" id="addEmpEmail" placeholder="e.g. john.doe@company.com"
+                        required>
                 </div>
                 <div class="settings-input-group">
                     <label class="settings-label">Joined Date</label>
                     <input type="date" class="settings-input" id="addEmpJoinedDate" required>
                 </div>
-                <button type="submit" class="btn-settings-save" style="width: 100%; margin-top: 10px;">Create Employee Profile</button>
+                <button type="submit" class="btn-settings-save" style="width: 100%; margin-top: 10px;">Create Employee
+                    Profile</button>
             </form>
         </div>
     </div>
@@ -237,4 +293,5 @@
     <script src="data.js"></script>
     <script src="app.js"></script>
 </body>
+
 </html>

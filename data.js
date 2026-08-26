@@ -11,62 +11,6 @@ window.AttendanceApp = window.AttendanceApp || {};
             email: "abhishek@company.com",
             status: "active", // active, break, offline
             joinedDate: "2024-01-15"
-        },
-        {
-            id: "EMP002",
-            name: "Harish",
-            email: "harish@company.com",
-            status: "active",
-            joinedDate: "2024-02-10"
-        },
-        {
-            id: "EMP003",
-            name: "Shahid",
-            email: "shahid@company.com",
-            status: "break",
-            joinedDate: "2024-03-22"
-        },
-        {
-            id: "EMP004",
-            name: "Shivkumar",
-            email: "shivkumar@company.com",
-            status: "offline",
-            joinedDate: "2024-05-01"
-        },
-        {
-            id: "EMP005",
-            name: "Deepali",
-            email: "deepali@company.com",
-            status: "offline",
-            joinedDate: "2024-06-18"
-        },
-        {
-            id: "EMP006",
-            name: "Avinash",
-            email: "avinash@company.com",
-            status: "offline",
-            joinedDate: "2024-07-05"
-        },
-        {
-            id: "EMP007",
-            name: "Mohammed Ateef",
-            email: "ateef@company.com",
-            status: "active",
-            joinedDate: "2024-08-01"
-        },
-        {
-            id: "EMP008",
-            name: "Arun",
-            email: "arun@company.com",
-            status: "offline",
-            joinedDate: "2024-08-15"
-        },
-        {
-            id: "EMP009",
-            name: "Yashwanth",
-            email: "yashwanth@company.com",
-            status: "offline",
-            joinedDate: "2024-09-01"
         }
     ];
 
@@ -180,7 +124,7 @@ window.AttendanceApp = window.AttendanceApp || {};
         let currentUserId = localStorage.getItem("attendance_current_user_id");
         let appVersion = localStorage.getItem("attendance_app_version");
 
-        const CURRENT_VERSION = "2.0-empty-logs";
+        const CURRENT_VERSION = "3.0-only-abhishek";
         let needReset = false;
 
         if (appVersion !== CURRENT_VERSION) {
