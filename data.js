@@ -178,9 +178,16 @@ window.AttendanceApp = window.AttendanceApp || {};
         let settings = localStorage.getItem("attendance_settings");
         let logs = localStorage.getItem("attendance_logs");
         let currentUserId = localStorage.getItem("attendance_current_user_id");
+        let appVersion = localStorage.getItem("attendance_app_version");
 
+        const CURRENT_VERSION = "2.0-empty-logs";
         let needReset = false;
-        if (employees) {
+
+        if (appVersion !== CURRENT_VERSION) {
+            needReset = true;
+        }
+
+        if (employees && !needReset) {
             try {
                 const parsedEmployees = JSON.parse(employees);
                 // Reset local storage state if employee count or any name does not match current code config
@@ -200,12 +207,13 @@ window.AttendanceApp = window.AttendanceApp || {};
             settings = defaultSettings;
             localStorage.setItem("attendance_settings", JSON.stringify(settings));
             
-            logs = generateMockLogs(employees, settings, 30);
+            logs = [];
             localStorage.setItem("attendance_logs", JSON.stringify(logs));
             
             currentUserId = employees[0].id;
             localStorage.setItem("attendance_current_user_id", currentUserId);
             
+            localStorage.setItem("attendance_app_version", CURRENT_VERSION);
             localStorage.removeItem("attendance_activities");
         } else {
             employees = JSON.parse(employees);
