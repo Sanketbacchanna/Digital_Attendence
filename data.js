@@ -60,6 +60,13 @@ window.AttendanceApp = window.AttendanceApp || {};
             email: "arun@company.com",
             status: "offline",
             joinedDate: "2024-08-15"
+        },
+        {
+            id: "EMP009",
+            name: "Yashwanth",
+            email: "yashwanth@company.com",
+            status: "offline",
+            joinedDate: "2024-09-01"
         }
     ];
 
