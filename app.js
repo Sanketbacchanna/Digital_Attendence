@@ -211,12 +211,7 @@
         else if (hours >= 17 && hours < 21) greeting = "Good Evening";
 
         const currentEmployee = App.getCurrentEmployee();
-        if (currentEmployee && currentEmployee.role === 'CEO') {
-            DOM.headerGreeting.textContent = `${greeting}, ${currentEmployee.name.split(' ')[0]}!`;
-            DOM.headerGreeting.style.display = 'block';
-        } else {
-            DOM.headerGreeting.style.display = 'none';
-        }
+        DOM.headerGreeting.textContent = `${greeting}, ${currentEmployee ? currentEmployee.name.split(' ')[0] : 'User'}!`;
 
         // Format Date
         DOM.headerDate.textContent = now.toLocaleTimeString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' }).split(' at ')[0];
@@ -228,7 +223,6 @@
     function renderUserSwitcher() {
         DOM.employeeSwitcherMenu.innerHTML = '';
         App.employees.forEach(emp => {
-            if (emp.role === 'CEO') return; // Exclude CEO from the employee switcher
             const item = document.createElement('div');
             item.className = 'dropdown-item';
             item.innerHTML = `
