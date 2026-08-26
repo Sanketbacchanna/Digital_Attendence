@@ -6,9 +6,9 @@ window.AttendanceApp = window.AttendanceApp || {};
     const defaultEmployees = [
         {
             id: "EMP001",
-            name: "Yashwanth",
+            name: "Abhishek",
             role: "CEO",
-            email: "yashwanth@company.com",
+            email: "abhishek@company.com",
             status: "active", // active, break, offline
             joinedDate: "2024-01-15"
         },
