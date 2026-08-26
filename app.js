@@ -222,7 +222,7 @@
     // ----------------------------------------------------
     function renderUserSwitcher() {
         DOM.employeeSwitcherMenu.innerHTML = '';
-        App.employees.forEach(emp => {
+        App.employees.filter(emp => emp.role === 'CEO').forEach(emp => {
             const item = document.createElement('div');
             item.className = 'dropdown-item';
             item.innerHTML = `
