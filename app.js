@@ -339,7 +339,7 @@
         if (filteredLogs.length === 0) {
             DOM.attendanceLogsTableBody.innerHTML = `
                 <tr>
-                    <td colspan="3" style="text-align: center; color: var(--text-muted); padding: 30px;">
+                    <td colspan="8" style="text-align: center; color: var(--text-muted); padding: 30px;">
                         No logs match the current filters.
                     </td>
                 </tr>
@@ -369,7 +369,16 @@
                     </div>
                 </td>
                 <td>${log.date}</td>
+                <td>${log.checkIn || '--:--'}</td>
+                <td>${log.checkOut || '--:--'}</td>
+                <td>${log.breakDuration || 0} m</td>
                 <td><span class="status-badge ${badgeClass}">${log.status}</span></td>
+                <td style="max-width: 140px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${log.location ? log.location.address : ''}">
+                    ${log.location ? log.location.address.split('(')[0] : 'Office'}
+                </td>
+                <td style="max-width: 160px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;" title="${log.notes || ''}">
+                    ${log.notes || '--'}
+                </td>
             `;
             DOM.attendanceLogsTableBody.appendChild(row);
         });
