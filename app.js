@@ -312,7 +312,7 @@
         filteredLogs = App.logs.filter(log => {
             // Find employee
             const emp = App.employees.find(e => e.id === log.employeeId);
-            if (!emp) return false;
+            if (!emp || emp.role === 'CEO') return false;
 
             // Search Filter
             const matchesSearch = emp.name.toLowerCase().includes(searchVal);
@@ -422,11 +422,12 @@
 
         // Calculate statistics
         const todayStr = new Date().toISOString().split('T')[0];
-        const total = App.employees.length;
+        const employeesOnly = App.employees.filter(emp => emp.role !== 'CEO');
+        const total = employeesOnly.length;
         let present = 0;
         let absent = 0;
 
-        App.employees.forEach(emp => {
+        employeesOnly.forEach(emp => {
             // Find today's log status
             const log = App.logs.find(l => l.employeeId === emp.id && l.date === todayStr);
             if (log) {
@@ -445,7 +446,7 @@
         // Render attendance grid cards
         ceoAttendanceGrid.innerHTML = '';
 
-        App.employees.forEach(emp => {
+        employeesOnly.forEach(emp => {
             // Find today's log status
             const log = App.logs.find(l => l.employeeId === emp.id && l.date === todayStr);
             const status = log ? log.status : 'Unmarked'; // Present, Absent, Unmarked

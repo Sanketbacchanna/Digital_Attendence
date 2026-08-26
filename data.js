@@ -109,6 +109,7 @@ window.AttendanceApp = window.AttendanceApp || {};
             }
 
             employees.forEach(emp => {
+                if (emp.role === 'CEO') return;
                 // 90% attendance probability for work days
                 const rand = Math.random();
                 let status = "Present";
