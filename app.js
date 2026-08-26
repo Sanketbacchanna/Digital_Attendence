@@ -22,12 +22,8 @@
         return `color-${index}`;
     }
 
-    // Active Interval for Time Clock
-    let sessionTimerInterval = null;
+    // Active Interval for Running Clock
     let clockInterval = null;
-    
-    // Calendar State
-    let calendarDate = new Date(); // Start with current month/year
 
     // Pagination State
     let logCurrentPage = 1;
@@ -56,26 +52,6 @@
         sidebarUserName: document.getElementById('sidebarUserName'),
         employeeSwitcherMenu: document.getElementById('employeeSwitcherMenu'),
         
-        // Dashboard Stats
-        statsHoursWorked: document.getElementById('statsHoursWorked'),
-        statsAttendanceRate: document.getElementById('statsAttendanceRate'),
-        statsLateDays: document.getElementById('statsLateDays'),
-        statsLeaveBalance: document.getElementById('statsLeaveBalance'),
-        
-        // Punch Panel
-        currentPunchStatusRibbon: document.getElementById('currentPunchStatusRibbon'),
-        mainPunchBtn: document.getElementById('mainPunchBtn'),
-        sessionTimer: document.getElementById('sessionTimerDisplay'),
-        breakBtn: document.getElementById('breakBtn'),
-        wfhBtn: document.getElementById('wfhBtn'),
-        punchNoteWrapper: document.getElementById('punchNoteWrapper'),
-        punchNoteInput: document.getElementById('punchNoteInput'),
-        simulatedLocationDisplay: document.getElementById('simulatedLocationDisplay'),
-        
-        // Team Tracker & Activities
-        teamTrackerList: document.getElementById('teamTrackerList'),
-        recentActivityTimeline: document.getElementById('recentActivityTimeline'),
-        
         // Logs Tab Filters & Table
         filterSearchName: document.getElementById('filterSearchName'),
         filterStatus: document.getElementById('filterStatus'),
@@ -88,49 +64,10 @@
         prevPageBtn: document.getElementById('prevPageBtn'),
         nextPageBtn: document.getElementById('nextPageBtn'),
         
-        // Calendar Tab
-        prevMonthBtn: document.getElementById('prevMonthBtn'),
-        nextMonthBtn: document.getElementById('nextMonthBtn'),
-        calendarMonthLabel: document.getElementById('calendarMonthLabel'),
-        calendarGrid: document.getElementById('calendarGrid'),
-        
-        // Modals
-        calendarDetailsModal: document.getElementById('calendarDetailsModal'),
-        modalDayTitle: document.getElementById('modalDayTitle'),
-        modalDetailsContent: document.getElementById('modalDetailsContent'),
-        modalCloseBtn: document.getElementById('modalCloseBtn'),
-        
-        // Analytics
-        donutCenterRate: document.getElementById('donutCenterRate'),
-        donutChartPresent: document.getElementById('donutChartPresent'),
-        donutChartLate: document.getElementById('donutChartLate'),
-        donutChartAbsent: document.getElementById('donutChartAbsent'),
-        analyticsBarChart: document.getElementById('analyticsBarChart'),
-        kpiAvgHours: document.getElementById('kpiAvgHours'),
-        kpiAvgHoursStatus: document.getElementById('kpiAvgHoursStatus'),
-        kpiOnTimeRate: document.getElementById('kpiOnTimeRate'),
-        kpiOnTimeStatus: document.getElementById('kpiOnTimeStatus'),
-        kpiTotalDays: document.getElementById('kpiTotalDays'),
-        
-        // Settings Tab
-        settingStartTime: document.getElementById('settingStartTime'),
-        settingEndTime: document.getElementById('settingEndTime'),
-        settingGracePeriod: document.getElementById('settingGracePeriod'),
-        settingLocationTrack: document.getElementById('settingLocationTrack'),
-        btnSaveSettings: document.getElementById('btnSaveSettings'),
-        btnResetAll: document.getElementById('btnResetAll'),
-        
         // CEO Portal Elements
         ceoTotalEmployees: document.getElementById('ceoTotalEmployees'),
         ceoActiveEmployees: document.getElementById('ceoActiveEmployees'),
-        ceoBreakEmployees: document.getElementById('ceoBreakEmployees'),
         ceoOfflineEmployees: document.getElementById('ceoOfflineEmployees'),
-        ceoEmployeeTableBody: document.getElementById('ceoEmployeeTableBody'),
-        ceoSearchEmployee: document.getElementById('ceoSearchEmployee'),
-        ceoOverrideEmployeeId: document.getElementById('ceoOverrideEmployeeId'),
-        ceoLeaveEmployeeId: document.getElementById('ceoLeaveEmployeeId'),
-        ceoOverrideForm: document.getElementById('ceoOverrideForm'),
-        ceoLeaveForm: document.getElementById('ceoLeaveForm'),
         ceoAddEmployeeModal: document.getElementById('ceoAddEmployeeModal'),
         btnOpenAddEmployeeModal: document.getElementById('btnOpenAddEmployeeModal'),
         btnAddEmployeeClose: document.getElementById('btnAddEmployeeClose'),
@@ -153,20 +90,9 @@
         // Render core UI components
         renderUserSwitcher();
         updateCurrentUserUI();
-        renderTeamTracker();
-        renderRecentActivity();
-        
-        // Set setting inputs to current values
-        loadSettingsInputs();
 
         // Event Listeners Setup
         setupEventListeners();
-        
-        // Initialize dashboard stats
-        updateDashboardStats();
-        
-        // Initialize CEO Portal dropdowns
-        populateCeoEmployeeDropdowns();
     }
 
     function setupEventListeners() {
@@ -191,14 +117,6 @@
             DOM.employeeSwitcherMenu.classList.remove('active');
         });
 
-        // Check In/Out & Break controls
-        DOM.mainPunchBtn.addEventListener('click', handlePunchAction);
-        DOM.breakBtn.addEventListener('click', handleBreakAction);
-        DOM.wfhBtn.addEventListener('click', () => {
-            const display = DOM.punchNoteWrapper.style.display;
-            DOM.punchNoteWrapper.style.display = display === 'none' ? 'block' : 'none';
-        });
-
         // Logs filters
         DOM.filterSearchName.addEventListener('input', () => { logCurrentPage = 1; filterAndRenderLogs(); });
         DOM.filterStatus.addEventListener('change', () => { logCurrentPage = 1; filterAndRenderLogs(); });
@@ -210,24 +128,7 @@
         DOM.btnExportCSV.addEventListener('click', exportLogsToCSV);
         DOM.btnPrintReport.addEventListener('click', () => window.print());
 
-        // Calendar Nav
-        DOM.prevMonthBtn.addEventListener('click', () => { calendarDate.setMonth(calendarDate.getMonth() - 1); renderCalendar(); });
-        DOM.nextMonthBtn.addEventListener('click', () => { calendarDate.setMonth(calendarDate.getMonth() + 1); renderCalendar(); });
-        
-        // Modal Controls
-        DOM.modalCloseBtn.addEventListener('click', () => DOM.calendarDetailsModal.classList.remove('active'));
-        DOM.calendarDetailsModal.addEventListener('click', (e) => {
-            if (e.target === DOM.calendarDetailsModal) DOM.calendarDetailsModal.classList.remove('active');
-        });
-
-        // Settings actions
-        DOM.btnSaveSettings.addEventListener('click', saveConfigSettings);
-        DOM.btnResetAll.addEventListener('click', resetLocalStorage);
-
         // CEO Portal events
-        if (DOM.ceoSearchEmployee) {
-            DOM.ceoSearchEmployee.addEventListener('input', renderCeoPortal);
-        }
         if (DOM.btnOpenAddEmployeeModal) {
             DOM.btnOpenAddEmployeeModal.addEventListener('click', () => {
                 document.getElementById('addEmpJoinedDate').value = new Date().toISOString().split('T')[0];
@@ -246,12 +147,6 @@
         }
         if (DOM.ceoAddEmployeeForm) {
             DOM.ceoAddEmployeeForm.addEventListener('submit', handleAddEmployee);
-        }
-        if (DOM.ceoOverrideForm) {
-            DOM.ceoOverrideForm.addEventListener('submit', handleOverrideAttendance);
-        }
-        if (DOM.ceoLeaveForm) {
-            DOM.ceoLeaveForm.addEventListener('submit', handleAssignLeave);
         }
     }
 
@@ -280,13 +175,6 @@
         // Render tab specific components when visited
         if (tabId === 'logs') {
             filterAndRenderLogs();
-        } else if (tabId === 'calendar') {
-            renderCalendar();
-        } else if (tabId === 'analytics') {
-            renderAnalytics();
-        } else if (tabId === 'dashboard') {
-            updateDashboardStats();
-            renderTeamTracker();
         } else if (tabId === 'ceo') {
             renderCeoPortal();
         }
@@ -362,270 +250,34 @@
         DOM.sidebarUserAvatar.className = `user-avatar initials-avatar ${getAvatarColorClass(user.id)}`;
         DOM.sidebarUserName.textContent = user.name;
 
-        // Reset check-in state variables
-        clearInterval(sessionTimerInterval);
-        DOM.sessionTimer.textContent = '00:00:00';
-        DOM.punchNoteInput.value = '';
-        DOM.punchNoteWrapper.style.display = 'none';
-
         // Check if the current user is the CEO
         const isCeo = user.role && user.role.toLowerCase() === 'ceo';
         
-        // Show/hide CEO Portal and Settings tabs in sidebar
+        // Show/hide CEO Portal tab in sidebar
         const ceoTab = document.querySelector('.nav-item[data-tab="ceo"]');
-        const settingsTab = document.querySelector('.nav-item[data-tab="settings"]');
-        
         if (ceoTab) ceoTab.style.display = isCeo ? '' : 'none';
-        if (settingsTab) settingsTab.style.display = isCeo ? '' : 'none';
         
-        // If not CEO and currently on a restricted tab, switch back to dashboard
+        // If not CEO and currently on a restricted tab, switch back to logs
         if (!isCeo) {
             const activeTab = document.querySelector('.nav-menu .nav-item.active');
             if (activeTab) {
                 const activeTabId = activeTab.getAttribute('data-tab');
-                if (activeTabId === 'ceo' || activeTabId === 'settings') {
-                    switchTab('dashboard');
+                if (activeTabId === 'ceo') {
+                    switchTab('logs');
                 }
             }
         }
 
-        // Simply hide/show the entire Time Clock card for non-CEO users
-        const punchCard = document.querySelector('.punch-card');
-        if (punchCard) {
-            punchCard.style.display = isCeo ? '' : 'none';
-        }
-
-        // Read current punch state
-        syncPunchUI();
-        updateDashboardStats();
-    }
-
-    // ----------------------------------------------------
-    // TIME CLOCK ATTENDANCE SYSTEM LOGIC
-    // ----------------------------------------------------
-    function getTodayLog() {
-        const todayStr = new Date().toISOString().split('T')[0];
-        return App.logs.find(log => log.employeeId === App.currentUserId && log.date === todayStr);
-    }
-
-    function syncPunchUI() {
-        const todayLog = getTodayLog();
-        const ribbon = DOM.currentPunchStatusRibbon;
-        const btn = DOM.mainPunchBtn;
-        const breakBtn = DOM.breakBtn;
-        const user = App.getCurrentEmployee();
-
-        if (!todayLog) {
-            // Checked out, no shift started
-            ribbon.textContent = 'Checked Out';
-            ribbon.className = 'punch-status-ribbon status-checked-out';
-            btn.className = 'punch-btn';
-            btn.querySelector('span').textContent = 'Check In';
-            btn.querySelector('svg').innerHTML = '<path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7"/>';
-            breakBtn.disabled = true;
-            breakBtn.className = 'action-btn';
-            breakBtn.querySelector('span').textContent = 'Take Break';
-            DOM.simulatedLocationDisplay.textContent = 'Awaiting check-in...';
-            
-            // Stop session timer
-            clearInterval(sessionTimerInterval);
-        } else if (todayLog.checkIn && !todayLog.checkOut) {
-            // Active shift
-            DOM.simulatedLocationDisplay.textContent = `${todayLog.location.address} (${todayLog.location.lat.toFixed(4)}, ${todayLog.location.lng.toFixed(4)})`;
-
-            if (todayLog.status === "On Break") {
-                // Currently on break
-                ribbon.textContent = 'On Break';
-                ribbon.className = 'punch-status-ribbon status-on-break';
-                btn.className = 'punch-btn checked-in';
-                btn.querySelector('span').textContent = 'Check Out';
-                btn.querySelector('svg').innerHTML = '<path d="M10 9v6m4-6v6m7-3a9 9 0 11-18 0 9 9 0 0118 0z"/>';
-                
-                breakBtn.disabled = false;
-                breakBtn.className = 'action-btn active';
-                breakBtn.querySelector('span').textContent = 'Resume Work';
-            } else {
-                // Active working
-                ribbon.textContent = todayLog.status; // Present or Late
-                ribbon.className = 'punch-status-ribbon status-checked-in';
-                btn.className = 'punch-btn checked-in';
-                btn.querySelector('span').textContent = 'Check Out';
-                btn.querySelector('svg').innerHTML = '<path d="M9 21H3v-6M21 3l-7 7M15 3h6v6M3 21l7-7"/>';
-                
-                breakBtn.disabled = false;
-                breakBtn.className = 'action-btn';
-                breakBtn.querySelector('span').textContent = 'Take Break';
+        // Always refresh the current tab content
+        const activeTab = document.querySelector('.nav-menu .nav-item.active');
+        if (activeTab) {
+            const activeTabId = activeTab.getAttribute('data-tab');
+            if (activeTabId === 'logs') {
+                filterAndRenderLogs();
+            } else if (activeTabId === 'ceo') {
+                renderCeoPortal();
             }
-
-            // Start session duration timer
-            startSessionDurationTimer(todayLog);
-        } else {
-            // Already checked out today
-            ribbon.textContent = 'Shift Finished';
-            ribbon.className = 'punch-status-ribbon status-checked-out';
-            btn.className = 'punch-btn';
-            btn.disabled = true;
-            btn.style.opacity = 0.5;
-            btn.querySelector('span').textContent = 'Done Today';
-            breakBtn.disabled = true;
-            DOM.simulatedLocationDisplay.textContent = `Ended at ${todayLog.checkOut}`;
-            
-            clearInterval(sessionTimerInterval);
         }
-    }
-
-    function startSessionDurationTimer(todayLog) {
-        clearInterval(sessionTimerInterval);
-        
-        function updateTimer() {
-            const now = new Date();
-            const checkInParts = todayLog.checkIn.split(':');
-            const checkInDate = new Date();
-            checkInDate.setHours(parseInt(checkInParts[0]), parseInt(checkInParts[1]), parseInt(checkInParts[2] || 0));
-
-            let diffMs = now - checkInDate;
-
-            // Deduct break time
-            let totalBreakMs = todayLog.breakDuration * 60000;
-            
-            // If currently on break, add the ongoing break duration
-            if (todayLog.status === "On Break" && todayLog.breakStartedAt) {
-                const ongoingBreakMs = now - new Date(todayLog.breakStartedAt);
-                totalBreakMs += ongoingBreakMs;
-            }
-
-            diffMs = Math.max(0, diffMs - totalBreakMs);
-
-            const hours = Math.floor(diffMs / 3600000);
-            const minutes = Math.floor((diffMs % 3600000) / 60000);
-            const seconds = Math.floor((diffMs % 60000) / 1000);
-
-            DOM.sessionTimer.textContent = 
-                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
-        }
-
-        updateTimer();
-        sessionTimerInterval = setInterval(updateTimer, 1000);
-    }
-
-    function handlePunchAction() {
-        const todayLog = getTodayLog();
-        const now = new Date();
-        const timeStr = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit', second: '2-digit' });
-        const dateStr = now.toISOString().split('T')[0];
-
-        if (!todayLog) {
-            // --- CHECK IN ---
-            // Calculate status (Present vs Late)
-            const shiftStartParts = App.settings.workStartTime.split(':');
-            const shiftStartMin = parseInt(shiftStartParts[0]) * 60 + parseInt(shiftStartParts[1]);
-            const currentMin = now.getHours() * 60 + now.getMinutes();
-            const lateDiff = currentMin - shiftStartMin;
-
-            let status = "Present";
-            let notes = DOM.punchNoteInput.value;
-            if (lateDiff > App.settings.gracePeriod) {
-                status = "Late";
-                notes = notes ? notes + " | Checked in late" : "Late arrival";
-            }
-
-            // Location simulation
-            let location = { lat: 37.7749, lng: -122.4194, address: "HQ Office (San Francisco)" };
-            if (Math.random() < 0.3) {
-                location = { lat: 37.8044, lng: -122.2711, address: "Remote (Oakland, CA)" };
-                notes = notes ? notes + " | Remote" : "Working remotely";
-            }
-
-            const newLog = {
-                id: `LOG_${dateStr.replace(/-/g, '')}_${App.currentUserId}`,
-                employeeId: App.currentUserId,
-                date: dateStr,
-                status: status,
-                checkIn: timeStr,
-                checkOut: null,
-                breakDuration: 0,
-                notes: notes,
-                location: location
-            };
-
-            // Update state
-            App.logs.push(newLog);
-            App.saveLogs(App.logs);
-
-            // Update user status
-            updateEmployeeStatus(App.currentUserId, "active");
-
-            // Add Activity timeline
-            addActivityLog("Check-In", `${App.getCurrentEmployee().name} checked in at ${timeStr}.`, "success");
-
-            // UI Refresh
-            syncPunchUI();
-            updateDashboardStats();
-            renderTeamTracker();
-        } else if (todayLog.checkIn && !todayLog.checkOut) {
-            // --- CHECK OUT ---
-            // If on break, resume first
-            if (todayLog.status === "On Break") {
-                handleBreakAction(); // Ends break
-            }
-
-            // Perform check out
-            const activeLog = getTodayLog(); // Reload latest
-            activeLog.checkOut = timeStr;
-            activeLog.notes = DOM.punchNoteInput.value ? DOM.punchNoteInput.value : activeLog.notes;
-            
-            App.saveLogs(App.logs);
-
-            // Update user status
-            updateEmployeeStatus(App.currentUserId, "offline");
-
-            // Add Activity timeline
-            addActivityLog("Check-Out", `${App.getCurrentEmployee().name} checked out at ${timeStr}.`, "danger");
-
-            // UI Refresh
-            syncPunchUI();
-            updateDashboardStats();
-            renderTeamTracker();
-        }
-    }
-
-    function handleBreakAction() {
-        const todayLog = getTodayLog();
-        if (!todayLog || todayLog.checkOut) return;
-
-        const now = new Date();
-        const timeStr = now.toLocaleTimeString('en-US', { hour12: false, hour: '2-digit', minute: '2-digit' });
-
-        if (todayLog.status !== "On Break") {
-            // --- GO ON BREAK ---
-            todayLog.status = "On Break";
-            todayLog.breakStartedAt = now.toISOString(); // Store timestamp
-            
-            App.saveLogs(App.logs);
-            updateEmployeeStatus(App.currentUserId, "break");
-            addActivityLog("Break Start", `${App.getCurrentEmployee().name} went on break at ${timeStr}.`, "warning");
-        } else {
-            // --- RESUME WORK ---
-            const breakStarted = new Date(todayLog.breakStartedAt);
-            const durationMins = Math.round((now - breakStarted) / 60000);
-            
-            // Restore previous check-in status
-            const shiftStartParts = App.settings.workStartTime.split(':');
-            const checkInParts = todayLog.checkIn.split(':');
-            const checkInMinutes = parseInt(checkInParts[0]) * 60 + parseInt(checkInParts[1]);
-            const shiftStartMinutes = parseInt(shiftStartParts[0]) * 60 + parseInt(shiftStartParts[1]);
-            
-            todayLog.status = (checkInMinutes - shiftStartMinutes > App.settings.gracePeriod) ? "Late" : "Present";
-            todayLog.breakDuration = (todayLog.breakDuration || 0) + durationMins;
-            delete todayLog.breakStartedAt;
-
-            App.saveLogs(App.logs);
-            updateEmployeeStatus(App.currentUserId, "active");
-            addActivityLog("Break End", `${App.getCurrentEmployee().name} returned from break. Duration: ${durationMins}m.`, "info");
-        }
-
-        syncPunchUI();
-        renderTeamTracker();
     }
 
     function updateEmployeeStatus(empId, status) {
@@ -634,102 +286,6 @@
             return emp;
         });
         App.saveEmployees(employees);
-    }
-
-    // ----------------------------------------------------
-    // SYSTEM STATS & KPI CALCULATIONS
-    // ----------------------------------------------------
-    function updateDashboardStats() {
-        const userLogs = App.getEmployeeLogs(App.currentUserId);
-        
-        // 1. Total Worked Hours
-        let totalMinutes = 0;
-        let presentDays = 0;
-        let lateDays = 0;
-
-        userLogs.forEach(log => {
-            if (log.checkIn && log.checkOut) {
-                const inParts = log.checkIn.split(':');
-                const outParts = log.checkOut.split(':');
-                
-                const inMins = parseInt(inParts[0]) * 60 + parseInt(inParts[1]);
-                const outMins = parseInt(outParts[0]) * 60 + parseInt(outParts[1]);
-                
-                let duration = outMins - inMins - (log.breakDuration || 0);
-                totalMinutes += Math.max(0, duration);
-            }
-            
-            if (log.status === "Present" || log.status === "Late") presentDays++;
-            if (log.status === "Late") lateDays++;
-        });
-
-        const totalHours = (totalMinutes / 60).toFixed(1);
-        DOM.statsHoursWorked.textContent = `${totalHours}h`;
-
-        // 2. Attendance Rate
-        const totalPotentialDays = Math.max(1, userLogs.filter(l => l.status !== "On Leave").length);
-        const rate = Math.round((presentDays / totalPotentialDays) * 100);
-        DOM.statsAttendanceRate.textContent = `${rate}%`;
-
-        // 3. Late Days
-        DOM.statsLateDays.textContent = `${lateDays}d`;
-
-        // 4. Leave Balance (Mocked - 15 total allowed per year, count how many leaves taken in logs)
-        const leavesTaken = userLogs.filter(log => log.status === "On Leave").length;
-        DOM.statsLeaveBalance.textContent = `${Math.max(0, 15 - leavesTaken)}d`;
-    }
-
-    // ----------------------------------------------------
-    // TEAM LIVE TRACKER & SYSTEM ACTIVITIES
-    // ----------------------------------------------------
-    function renderTeamTracker() {
-        DOM.teamTrackerList.innerHTML = '';
-        
-        App.employees.forEach(emp => {
-            // Find employee's attendance entry for today
-            const todayStr = new Date().toISOString().split('T')[0];
-            const log = App.logs.find(l => l.employeeId === emp.id && l.date === todayStr);
-
-            let statusLabel = "OFFLINE";
-            let statusDotClass = "status-dot-offline";
-            let timeLogLabel = "Checked Out";
-            let timeLogVal = log && log.checkOut ? log.checkOut.substring(0, 5) : "--:--";
-            let valClass = "";
-
-            if (emp.status === "active") {
-                statusLabel = "WORKING";
-                statusDotClass = "status-dot-active";
-                timeLogLabel = "Checked In";
-                timeLogVal = log && log.checkIn ? log.checkIn.substring(0, 5) : "--:--";
-                if (log && log.status === "Late") {
-                    valClass = "late";
-                }
-            } else if (emp.status === "break") {
-                statusLabel = "ON BREAK";
-                statusDotClass = "status-dot-break";
-                timeLogLabel = "Break duration";
-                timeLogVal = log ? `${log.breakDuration || 0} mins` : "--";
-            }
-
-            const item = document.createElement('div');
-            item.className = 'team-member-card';
-            item.innerHTML = `
-                <div class="member-info-section">
-                    <div class="member-avatar-wrapper">
-                        <div class="member-avatar initials-avatar ${getAvatarColorClass(emp.id)}">${getInitials(emp.name)}</div>
-                        <span class="status-indicator-dot ${statusDotClass}"></span>
-                    </div>
-                    <div class="member-name-role">
-                        <span class="member-name">${emp.name}</span>
-                    </div>
-                </div>
-                <div class="member-time-log">
-                    <span class="member-log-label">${timeLogLabel}</span>
-                    <span class="member-log-time ${valClass}">${timeLogVal}</span>
-                </div>
-            `;
-            DOM.teamTrackerList.appendChild(item);
-        });
     }
 
     function addActivityLog(type, text, theme) {
@@ -742,30 +298,6 @@
         if (activities.length > 10) activities.pop();
         
         localStorage.setItem("attendance_activities", JSON.stringify(activities));
-        renderRecentActivity();
-    }
-
-    function renderRecentActivity() {
-        DOM.recentActivityTimeline.innerHTML = '';
-        const activities = JSON.parse(localStorage.getItem("attendance_activities") || "[]");
-
-        if (activities.length === 0) {
-            DOM.recentActivityTimeline.innerHTML = '<span class="loc-label" style="text-align: center; display: block; padding: 10px;">No recent actions logged today.</span>';
-            return;
-        }
-
-        activities.forEach(act => {
-            const item = document.createElement('div');
-            item.className = 'timeline-item';
-            item.innerHTML = `
-                <span class="timeline-dot ${act.theme}"></span>
-                <div class="timeline-content">
-                    <span class="timeline-title">${act.type}</span>
-                    <span class="timeline-desc">${act.text} <span style="color: var(--text-muted); font-size: 10px;">(${act.time})</span></span>
-                </div>
-            `;
-            DOM.recentActivityTimeline.appendChild(item);
-        });
     }
 
     // ----------------------------------------------------
@@ -825,6 +357,7 @@
 
         paginatedItems.forEach(log => {
             const emp = App.employees.find(e => e.id === log.employeeId);
+            if (!emp) return;
             
             const badgeClass = log.status.toLowerCase().replace(' ', '-');
             const row = document.createElement('tr');
@@ -856,7 +389,6 @@
         DOM.nextPageBtn.disabled = endIdx >= filteredLogs.length;
     }
 
-    // Adjust colspan in the table header of index.html in mind
     function exportLogsToCSV() {
         if (filteredLogs.length === 0) return;
         
@@ -882,245 +414,8 @@
     }
 
     // ----------------------------------------------------
-    // CALENDAR MONTH VIEW GRID
-    // ----------------------------------------------------
-    function renderCalendar() {
-        const year = calendarDate.getFullYear();
-        const month = calendarDate.getMonth();
-
-        // Label
-        DOM.calendarMonthLabel.textContent = calendarDate.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
-
-        // Clear grid
-        DOM.calendarGrid.innerHTML = '';
-
-        // Get first day of month and last day of month
-        const firstDayIdx = new Date(year, month, 1).getDay();
-        const totalDays = new Date(year, month + 1, 0).getDate();
-        const prevMonthTotalDays = new Date(year, month, 0).getDate();
-
-        // Render previous month blank padding days
-        for (let i = firstDayIdx - 1; i >= 0; i--) {
-            const cell = document.createElement('div');
-            cell.className = 'calendar-day-cell other-month';
-            cell.innerHTML = `<span class="calendar-day-number">${prevMonthTotalDays - i}</span>`;
-            DOM.calendarGrid.appendChild(cell);
-        }
-
-        // Render actual days of current month
-        for (let day = 1; day <= totalDays; day++) {
-            const dayStr = `${year}-${(month + 1).toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
-            const cell = document.createElement('div');
-            cell.className = 'calendar-day-cell';
-            
-            // Check logs for current selected employee on this day
-            const log = App.logs.find(l => l.employeeId === App.currentUserId && l.date === dayStr);
-
-            let statusClass = '';
-            let statusDot = '';
-            
-            // Check if day is weekend
-            const dayOfWeek = new Date(year, month, day).getDay();
-            const isWeekend = App.settings.weeklyOffDays.includes(dayOfWeek);
-
-            if (log) {
-                statusClass = log.status.replace(' ', '-'); // Present, Late, Absent, On-Leave
-                statusDot = `<div class="calendar-day-status ${statusClass}" title="${log.status}"></div>`;
-            } else if (isWeekend) {
-                statusDot = `<div class="calendar-day-status Weekend" title="Weekly Off"></div>`;
-            }
-
-            cell.innerHTML = `
-                <span class="calendar-day-number">${day}</span>
-                ${statusDot}
-            `;
-
-            // Open Detail Modal on Click
-            cell.addEventListener('click', () => openCalendarDayDetails(dayStr, log, isWeekend));
-            DOM.calendarGrid.appendChild(cell);
-        }
-    }
-
-    function openCalendarDayDetails(dateStr, log, isWeekend) {
-        DOM.modalDayTitle.textContent = `Log Details: ${dateStr}`;
-        const container = DOM.modalDetailsContent;
-        container.innerHTML = '';
-
-        if (log) {
-            const badgeClass = log.status.toLowerCase().replace(' ', '-');
-            container.innerHTML = `
-                <div class="modal-detail-row">
-                    <span class="modal-detail-label">Status</span>
-                    <span class="modal-detail-value"><span class="status-badge ${badgeClass}">${log.status}</span></span>
-                </div>
-                <div class="modal-detail-row">
-                    <span class="modal-detail-label">Check-In Time</span>
-                    <span class="modal-detail-value">${log.checkIn || '--:--'}</span>
-                </div>
-                <div class="modal-detail-row">
-                    <span class="modal-detail-label">Check-Out Time</span>
-                    <span class="modal-detail-value">${log.checkOut || '--:--'}</span>
-                </div>
-                <div class="modal-detail-row">
-                    <span class="modal-detail-label">Break Duration</span>
-                    <span class="modal-detail-value">${log.breakDuration || 0} minutes</span>
-                </div>
-                <div class="modal-detail-row">
-                    <span class="modal-detail-label">Location Tag</span>
-                    <span class="modal-detail-value">${log.location ? log.location.address : 'HQ Office'}</span>
-                </div>
-                <div class="modal-detail-row" style="flex-direction: column; align-items: flex-start; gap: 6px;">
-                    <span class="modal-detail-label">Notes</span>
-                    <span class="modal-detail-value" style="font-weight: normal; font-style: italic; line-height: 1.4;">${log.notes || 'No entry notes.'}</span>
-                </div>
-            `;
-        } else {
-            container.innerHTML = `
-                <div style="text-align: center; padding: 20px 0;">
-                    <svg viewBox="0 0 24 24" width="48" height="48" stroke="var(--text-muted)" stroke-width="1.5" fill="none" style="margin-bottom: 12px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
-                    <p style="font-weight: 600; font-size: 14px;">No shift logged on this day.</p>
-                    <p style="color: var(--text-muted); font-size: 12px; margin-top: 4px;">
-                        ${isWeekend ? 'This day was a configured weekly off (weekend).' : 'The employee was marked Absent / had no activity logged.'}
-                    </p>
-                </div>
-            `;
-        }
-
-        DOM.calendarDetailsModal.classList.add('active');
-    }
-
-    // ----------------------------------------------------
-    // ANALYTICS & SVG CHARTS RENDERING
-    // ----------------------------------------------------
-    function renderAnalytics() {
-        const userLogs = App.getEmployeeLogs(App.currentUserId);
-        
-        let present = 0;
-        let late = 0;
-        let absent = 0;
-        let leave = 0;
-        
-        userLogs.forEach(l => {
-            if (l.status === 'Present') present++;
-            else if (l.status === 'Late') late++;
-            else if (l.status === 'Absent') absent++;
-            else if (l.status === 'On Leave') leave++;
-        });
-
-        const total = present + late + absent + leave || 1;
-        
-        // Compute Percentages
-        const presentPct = (present / total) * 100;
-        const latePct = (late / total) * 100;
-        const absentPct = (absent / total) * 100;
-
-        DOM.donutCenterRate.textContent = `${Math.round(presentPct + latePct)}%`;
-
-        // SVG circle perimeter is 2 * PI * r = 2 * 3.14159 * 80 = 502.65
-        const circumference = 502.65;
-        
-        // Present Circle
-        const presentDash = (present / total) * circumference;
-        DOM.donutChartPresent.style.strokeDasharray = `${presentDash} ${circumference}`;
-        
-        // Late Circle (Offset)
-        const lateDash = (late / total) * circumference;
-        DOM.donutChartLate.style.strokeDasharray = `${lateDash} ${circumference}`;
-        DOM.donutChartLate.style.strokeDashoffset = `-${presentDash}`;
-
-        // Absent Circle (Offset)
-        const absentDash = (absent / total) * circumference;
-        DOM.donutChartAbsent.style.strokeDasharray = `${absentDash} ${circumference}`;
-        DOM.donutChartAbsent.style.strokeDashoffset = `-${presentDash + lateDash}`;
-
-        // KPI Section Math
-        let totalMinutes = 0;
-        let shiftLogsCount = 0;
-        userLogs.forEach(log => {
-            if (log.checkIn && log.checkOut) {
-                const inParts = log.checkIn.split(':');
-                const outParts = log.checkOut.split(':');
-                const inMins = parseInt(inParts[0]) * 60 + parseInt(inParts[1]);
-                const outMins = parseInt(outParts[0]) * 60 + parseInt(outParts[1]);
-                totalMinutes += Math.max(0, outMins - inMins - (log.breakDuration || 0));
-                shiftLogsCount++;
-            }
-        });
-
-        const avgHrsVal = shiftLogsCount > 0 ? (totalMinutes / (shiftLogsCount * 60)).toFixed(1) : '0.0';
-        DOM.kpiAvgHours.textContent = `${avgHrsVal} hours/day`;
-        DOM.kpiAvgHoursStatus.textContent = parseFloat(avgHrsVal) >= 8.0 ? 'Optimal' : 'Short Hours';
-        DOM.kpiAvgHoursStatus.className = `status-badge ${parseFloat(avgHrsVal) >= 8.0 ? 'present' : 'late'}`;
-
-        const onTimeRateVal = present + late > 0 ? Math.round((present / (present + late)) * 100) : 0;
-        DOM.kpiOnTimeRate.textContent = `${onTimeRateVal}% on-time`;
-        DOM.kpiOnTimeStatus.textContent = onTimeRateVal >= 90 ? 'Excellent' : 'Needs Work';
-        DOM.kpiOnTimeStatus.className = `status-badge ${onTimeRateVal >= 90 ? 'present' : 'late'}`;
-
-        DOM.kpiTotalDays.textContent = `${userLogs.length} logs`;
-
-        // Render custom bar chart weekly
-        renderWeeklyBarChart(userLogs);
-    }
-
-    function renderWeeklyBarChart(logs) {
-        DOM.analyticsBarChart.innerHTML = '';
-        
-        // Group logs into last 5 weeks
-        const weeks = [
-            { label: 'Wk 1', mins: 0, count: 0 },
-            { label: 'Wk 2', mins: 0, count: 0 },
-            { label: 'Wk 3', mins: 0, count: 0 },
-            { label: 'Wk 4', mins: 0, count: 0 },
-            { label: 'Wk 5', mins: 0, count: 0 }
-        ];
-
-        // Fill weekly bins mock math
-        logs.forEach((log, index) => {
-            if (log.checkIn && log.checkOut) {
-                const inParts = log.checkIn.split(':');
-                const outParts = log.checkOut.split(':');
-                const duration = (parseInt(outParts[0]) * 60 + parseInt(outParts[1])) - (parseInt(inParts[0]) * 60 + parseInt(inParts[1])) - (log.breakDuration || 0);
-                
-                // Distribute evenly across 5 weeks based on logs count
-                const bin = Math.min(4, Math.floor(index / (logs.length / 5)));
-                weeks[bin].mins += duration;
-                weeks[bin].count++;
-            }
-        });
-
-        weeks.forEach(wk => {
-            const avgHrs = wk.count > 0 ? (wk.mins / (wk.count * 60)) : 0;
-            // Target is 8 hours daily. Max height scale at 10 hours.
-            const heightPct = Math.min(100, Math.round((avgHrs / 10) * 100));
-
-            const col = document.createElement('div');
-            col.className = 'bar-column';
-            col.innerHTML = `
-                <span class="member-log-time" style="font-size: 10px;">${avgHrs.toFixed(1)}h</span>
-                <div class="bar-fill-wrapper">
-                    <div class="bar-fill" style="height: ${heightPct}%;"></div>
-                </div>
-                <span class="bar-label">${wk.label}</span>
-            `;
-            DOM.analyticsBarChart.appendChild(col);
-        });
-    }
-
-    // ----------------------------------------------------
     // CEO PORTAL MANAGEMENT PANEL
     // ----------------------------------------------------
-    function populateCeoEmployeeDropdowns() {
-        if (!DOM.ceoOverrideEmployeeId || !DOM.ceoLeaveEmployeeId) return;
-        
-        const options = App.employees.map(emp => 
-            `<option value="${emp.id}">${emp.name} (${emp.role})</option>`
-        ).join('');
-        
-        DOM.ceoOverrideEmployeeId.innerHTML = options;
-        DOM.ceoLeaveEmployeeId.innerHTML = options;
-    }
-
     function renderCeoPortal() {
         const ceoAttendanceGrid = document.getElementById('ceoAttendanceGrid');
         if (!ceoAttendanceGrid) return;
@@ -1218,11 +513,9 @@
 
         // Refresh UI
         renderCeoPortal();
-        renderTeamTracker();
         
-        // If the CEO marked the currently selected user, sync dashboard UI
+        // If the CEO marked the currently selected user, sync UI
         if (empId === App.currentUserId) {
-            syncPunchUI();
             updateCurrentUserUI();
         }
 
@@ -1262,52 +555,49 @@
 
         // Refresh UI
         renderCeoPortal();
-        renderTeamTracker();
 
-        // If the CEO marked the currently selected user, sync dashboard UI
+        // If the CEO marked the currently selected user, sync UI
         if (empId === App.currentUserId) {
-            syncPunchUI();
             updateCurrentUserUI();
         }
 
         addActivityLog("System Admin", `CEO marked ${emp.name} Absent.`, "danger");
     };
 
-    // ----------------------------------------------------
-    // SETTINGS PANEL
-    // ----------------------------------------------------
-    function loadSettingsInputs() {
-        DOM.settingStartTime.value = App.settings.workStartTime;
-        DOM.settingEndTime.value = App.settings.workEndTime;
-        DOM.settingGracePeriod.value = App.settings.gracePeriod;
-        DOM.settingLocationTrack.checked = App.settings.allowSimulatedGeo;
-    }
+    function handleAddEmployee(e) {
+        e.preventDefault();
+        const name = document.getElementById('addEmpName').value.trim();
+        const role = document.getElementById('addEmpRole').value.trim();
+        const email = document.getElementById('addEmpEmail').value.trim();
+        const joinedDate = document.getElementById('addEmpJoinedDate').value;
 
-    function saveConfigSettings() {
-        const config = {
-            workStartTime: DOM.settingStartTime.value,
-            workEndTime: DOM.settingEndTime.value,
-            gracePeriod: parseInt(DOM.settingGracePeriod.value) || 0,
-            weeklyOffDays: App.settings.weeklyOffDays,
-            holidays: App.settings.holidays,
-            allowSimulatedGeo: DOM.settingLocationTrack.checked
+        if (!name || !role || !email || !joinedDate) return;
+
+        // Generate ID
+        const nextIdNum = App.employees.length + 1;
+        const newId = `EMP${nextIdNum.toString().padStart(3, '0')}`;
+
+        const newEmp = {
+            id: newId,
+            name: name,
+            role: role,
+            email: email,
+            status: "offline",
+            joinedDate: joinedDate
         };
 
-        App.saveSettings(config);
-        
-        // Notify
-        addActivityLog("Config Updated", "Company working hours and settings updated.", "info");
-        alert("System attendance settings saved successfully.");
-        
-        // Re-read current check-ins in case settings altered late calculations
-        syncPunchUI();
-    }
+        App.employees.push(newEmp);
+        App.saveEmployees(App.employees);
 
-    function resetLocalStorage() {
-        if (confirm("Are you sure you want to clear all attendance logs, employees, and config settings? This will reload default mock logs.")) {
-            localStorage.clear();
-            window.location.reload();
-        }
+        // Reset form & close modal
+        DOM.ceoAddEmployeeForm.reset();
+        DOM.ceoAddEmployeeModal.classList.remove('active');
+
+        // Refresh UI
+        renderCeoPortal();
+        renderUserSwitcher();
+
+        addActivityLog("System Admin", `CEO added new employee: ${name} (${role}).`, "success");
     }
 
     // Initialize on page load
